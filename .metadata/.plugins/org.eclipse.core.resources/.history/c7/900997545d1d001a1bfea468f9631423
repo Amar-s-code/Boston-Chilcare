@@ -1,0 +1,66 @@
+package bostonchildcare.Controller;
+
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.QueryBuilder;
+import com.mongodb.client.MongoCollection;
+
+import bostonchildcare.View.Individual_Class_View;
+
+public class Individual_Class_Controller {
+	private static final Individual_Class_Controller instance = new Individual_Class_Controller();
+	
+	
+	
+	
+	 public Individual_Class_Controller get_instance() {
+	 return instance; 
+	 }
+	 
+	
+	public void initController(String sec_name,String age_cat) {
+		Individual_Class_View view = Individual_Class_View.get_instance();
+		load_table(view,sec_name,age_cat);
+		view.getBackbtn().addActionListener(l->go_back(view));
+		view.setVisible(true);
+		
+	}
+	
+	public void load_table(Individual_Class_View view, String sec_name,String age_cat) {
+		MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+		DB db = mongoClient.getDB( "Daycare" );
+		DBCollection collection = db.getCollection("Teacher");
+		DBObject query = QueryBuilder.start("Age_Category").is(age_cat).and("assigned_section").is(sec_name).get();
+		DBCursor cursor = collection.find(query);
+		String[] colnames = {"Age Category","Section Name","Teachers List","Students List"};
+		DefaultTableModel model = new DefaultTableModel(colnames,0);
+		int count = 0;
+		while(cursor.hasNext()) {
+			DBObject obj = cursor.next();
+			String fname = (String)obj.get("First Name");
+			String lname = (String)obj.get("Last Name");
+			if(count==0) {
+			model.addRow(new Object[] {sec_name,age_cat,fname+" "+lname," "});
+			count++;
+			}else {
+			model.addRow(new Object[] {"","",fname+" "+lname," "});
+			count++;
+			}
+		}
+		view.getTable().setModel(model);
+		mongoClient.close();
+	}
+	
+	public void go_back(Individual_Class_View v) {
+		v.setVisible(false);
+		Admin_School_Frame_Controller.get_instance().initController();
+	}
+	
+}

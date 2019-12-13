@@ -1,0 +1,180 @@
+package bostonchildcare.Controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.QueryBuilder;
+
+import Helpers.MyTableCellRenderer_Vaccination_Issue;
+import Helpers.MyTableModel;
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Student_Model;
+import bostonchildcare.View.ClassStudents_View;
+
+public class ClassStudents_Controller {
+	private static final ClassStudents_Controller instance = new ClassStudents_Controller();
+	private ClassStudents_View class_stud_view;
+	private StudentTeacher_Office_Controller st_off_contr;
+	private CurrentVaccinationReport_Controller currvacc_contr;
+	
+	public static ClassStudents_Controller get_instance() {
+		return instance;
+	}
+	
+	private ClassStudents_Controller() {
+	}
+	
+	public void initController() {
+		this.class_stud_view = ClassStudents_View.getInstance();
+		class_stud_view.setVisible(true);
+		String age_cat = class_stud_view.getAgecatcombo().toString();
+		String[] j = get_sect(age_cat);
+		class_stud_view.getBackbtn().addActionListener(l->go_back());
+		DefaultComboBoxModel<String> model =  new DefaultComboBoxModel<String>(j);
+		
+		class_stud_view.getSectcombo().addActionListener(l->load_lbls());
+		class_stud_view.getSectcombo().setModel(model);
+		load_data(class_stud_view.getAgecatcombo().getSelectedItem().toString());
+		class_stud_view.getAgecatcombo().addActionListener(l->load_data(class_stud_view.getAgecatcombo().getSelectedItem().toString()));
+		class_stud_view.getViewvaccrepbtn().addActionListener(l->nav_vaccination_details());
+		
+	}
+	
+	public void nav_vaccination_details() {
+		JTable table = class_stud_view.getTable();
+		int selected_row = table.getSelectedRow();
+		String fname =(String)table.getModel().getValueAt(selected_row, 0);
+		String lname =(String)table.getModel().getValueAt(selected_row, 1);
+		 //table.getValueAt(selected_row, 0);
+		 //table.getValueAt(selected_row, 1);
+		class_stud_view.dispose();
+		currvacc_contr.get_instance().initController(fname,lname);
+		//this.class_stud_view = null;
+	}
+	
+	public void go_back() {
+		//this.class_stud_view.setVisible(false);
+		//this.class_stud_view.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//this.class_stud_view = null;
+		class_stud_view.setVisible(false);
+		st_off_contr.get_instance().initController();
+	}
+	
+	public void load_data(String age_cat) {
+		//String[] s1 = {"King","Queen"};
+		//assign_class_view.setSect_combo_box(new JComboBox<String>(s1));
+		
+		
+		String[] j = get_sect(age_cat);
+		DefaultComboBoxModel<String> model_c =  new DefaultComboBoxModel<String>(j);
+		class_stud_view.getSectcombo().setModel(model_c);
+		class_stud_view.getSectcombo().addActionListener(l->load_val_selected_sec(class_stud_view.getSectcombo().getSelectedItem().toString()));
+//		String[] columns = {"First Name","Last Name","Age","Age_Category"};
+//		//DefaultTableModel model = new DefaultTableModel(columns,0);
+//		 MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+//		 DB db = mongoClient.getDB( "Daycare" );
+//		 DBCollection coll = db.getCollection("Student");
+//		 DBObject query =  QueryBuilder.start("Age Category").is(age_cat).and("Section").notEquals("").and("Vaccination_report_initialized").is(true).get();
+//		 DBCursor cursor = coll.find(query);
+//		 while(cursor.hasNext()) {
+//			 DBObject obj = cursor.next();
+//			 String fname = (String)obj.get("First Name");
+//			 String lname = (String)obj.get("Last Name");
+//			 int age = (Integer)obj.get("Age");
+//			 //model.addRow(new Object[] {fname,lname,age,age_cat});
+//			 for(Student_Model m:School_Model.get_instance().getEnrolled_student_list()) {
+//					if(m.getFname().equalsIgnoreCase(fname)) {
+//						model.addStudent(m);
+//					}
+//				}
+//		}
+//		 tab.setModel(model);
+}
+	
+	public void load_val_selected_sec(String sec) {
+		//String[] columns = {"First Name","Last Name","Age","Age_Category"};
+//		//DefaultTableModel model = new DefaultTableModel(columns,0);
+		JTable table = class_stud_view.getTable();
+		MyTableModel model = new MyTableModel();
+		table.setModel(model); 
+	    for (int i =0; i<model.getColumnCount();i++) {
+	         table.setDefaultRenderer(table.getColumnClass(i), new MyTableCellRenderer_Vaccination_Issue());
+	      }
+		//Helpers.MyTableModel model = (Helpers.MyTableModel) tab.getModel();
+		model.setRowCount();
+		//String sec = class_stud_view.getSectcombo().getSelectedItem().toString();
+		MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+		DB db = mongoClient.getDB( "Daycare" );
+		 DBCollection coll = db.getCollection("Student");
+		 DBObject query =  QueryBuilder.start("Age Category").is(class_stud_view.getAgecatcombo().getSelectedItem().toString()).and("Section").is(sec).and("Vaccination_report_initialized").is(true).get();
+		 DBCursor cursor = coll.find(query);
+		 while(cursor.hasNext()) {
+			 DBObject obj = cursor.next();
+			 String fname = (String)obj.get("First Name");
+			 String lname = (String)obj.get("Last Name");
+			 int age = (Integer)obj.get("Age");
+			 //model.addRow(new Object[] {fname,lname,age,age_cat});
+			 for(Student_Model m:School_Model.get_instance().getEnrolled_student_list()) {
+					if(m.getFname().equalsIgnoreCase(fname)) {
+						model.addStudent(m);
+					}
+				}
+		}
+		 table.setModel(model);
+		 mongoClient.close();
+	}
+	
+	public void load_lbls() {
+		
+		String sect = class_stud_view.getSectcombo().getSelectedItem().toString();
+
+		MongoClientURI uri = new MongoClientURI(
+			    "mongodb+srv://amar:mathisfun@mydaycare-i8kor.mongodb.net/test?retryWrites=true&w=majority");
+		MongoClient mongoClient = new MongoClient( uri);
+		 DB db = mongoClient.getDB( "Mongobackup" );
+		 DBCollection coll = db.getCollection("Classes");
+		 DBObject query = QueryBuilder.start("Section_Name").is(sect).get();
+		 DBCursor cursor = coll.find(query);
+		 while(cursor.hasNext()) {
+			 DBObject obj = cursor.next();
+			 String val = (String)obj.get("Current_Student/Max_Student_Count");
+			 String[] values = val.split("/"); 
+			  int curr_student = Integer.valueOf(values[0]);
+			  int max_student = Integer.valueOf(values[1]);
+			  class_stud_view.getCurrStrengthlbl().setText(String.valueOf(curr_student));
+			  //class_stud_view.getAvailable_lbl().setText(String.valueOf(max_student-curr_student));
+		 }
+		 mongoClient.close();
+	}
+
+	
+	public String[] get_sect(String age_cat) {
+		
+		MongoClientURI uri = new MongoClientURI(
+			    "mongodb+srv://amar:mathisfun@mydaycare-i8kor.mongodb.net/test?retryWrites=true&w=majority");
+		MongoClient mongoClient = new MongoClient( uri);
+		 DB db = mongoClient.getDB( "Mongobackup" );
+		DBCollection coll = db.getCollection("Classes");
+		DBObject query = QueryBuilder.start("Age_Category").is(age_cat).get();
+		DBCursor cursor = coll.find(query);
+		List<String> sections = new ArrayList<String>();
+		while(cursor.hasNext()) {
+			DBObject obj = cursor.next();
+			sections.add((String)obj.get("Section_Name"));		
+		}
+		String[] sect = sections.toArray(new String[sections.size()]);
+		mongoClient.close();
+		return sect;
+	}
+}

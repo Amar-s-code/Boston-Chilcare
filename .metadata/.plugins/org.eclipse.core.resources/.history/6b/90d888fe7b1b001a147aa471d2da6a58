@@ -1,0 +1,311 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bostonchildcare.Model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
+
+/**
+ *
+ * @author amarn
+ */
+public class School_Model {
+   private static final School_Model instance = new School_Model(); 	
+   public List<Student_Model> getUnenrolled_student_list() {
+	return unenrolled_student_list;
+}
+
+public List<Student_Model> getEnrolled_student_list() {
+	return enrolled_student_list;
+}
+
+
+
+public List<Teacher_Model> getAssigned_teacher_list() {
+	return assigned_teacher_list;
+}
+
+private List<Student_Model> unenrolled_student_list;
+   private List<Student_Model> enrolled_student_list;
+   private List<Teacher_Model> unassigned_teacher_list;
+   private List<Teacher_Model> assigned_teacher_list;
+   private List<ClassRoom_Model> classrooms;
+   
+   
+   public List<ClassRoom_Model> getClassrooms() {
+	return classrooms;
+}
+
+public void setClassrooms(List<ClassRoom_Model> classrooms) {
+	this.classrooms = classrooms;
+}
+
+public List<Teacher_Model> loadUnassigned_teacher_list() {
+		
+	    MongoClient mongoclient  = new MongoClient("localhost",27017);
+		DB db = mongoclient.getDB("Daycare");
+		DBCollection collection = db.getCollection("Teacher");
+		DBObject query = QueryBuilder.start("assigned").is(false).get();
+		DBCursor cursor = collection.find(query);
+		List<Teacher_Model> t = new ArrayList<Teacher_Model>();
+		while(cursor.hasNext()) {
+			DBObject obj = cursor.next();
+	    	String first = (String)obj.get("First Name");
+	    	String last =(String)obj.get("Last Name");
+	    	int age = (Integer)obj.get("Age");
+	    	String age_cat = (String)obj.get("Age_Category");
+	    	int credits = (Integer)obj.get("Credits");
+	    	String sect = (String)obj.get("assigned_section");
+	    	t.add(new Teacher_Model(credits,first,last,age,age_cat,sect));
+		}
+		//cursor.close();
+	    unassigned_teacher_list.addAll(t);
+		return unassigned_teacher_list;
+	}
+   
+   public List<Teacher_Model> loadAssigned_teacher_list() {
+		
+	    MongoClient mongoclient  = new MongoClient("localhost",27017);
+		DB db = mongoclient.getDB("Daycare");
+		DBCollection collection = db.getCollection("Teacher");
+		DBObject query = QueryBuilder.start("assigned").is(true).get();
+		DBCursor cursor = collection.find(query);
+		List<Teacher_Model> t = new ArrayList<Teacher_Model>();
+		while(cursor.hasNext()) {
+			DBObject obj = cursor.next();
+	    	String first = (String)obj.get("First Name");
+	    	String last =(String)obj.get("Last Name");
+	    	int age = (Integer)obj.get("Age");
+	    	String age_cat = (String)obj.get("Age_Category");
+	    	int credits = (Integer)obj.get("Credits");
+	    	String sect = (String)obj.get("assigned_section");
+	    	t.add(new Teacher_Model(credits,first,last,age,age_cat,sect));
+		}
+		//cursor.close();
+	    assigned_teacher_list.addAll(t);
+		return assigned_teacher_list;
+	}
+   
+   public List<Student_Model> loadUnenrolled_student_list() {
+		
+	    MongoClient mongoclient  = new MongoClient("localhost",27017);
+		DB db = mongoclient.getDB("Daycare");
+		DBCollection collection = db.getCollection("Student");
+		DBObject query = QueryBuilder.start("Section").is("").get();
+		DBCursor cursor = collection.find(query);
+		List<Student_Model> s = new ArrayList<Student_Model>();
+		while(cursor.hasNext()) {
+			DBObject obj = cursor.next();
+	    	String first = (String)obj.get("First Name");
+	    	String last =(String)obj.get("Last Name");
+	    	int age = (Integer)obj.get("Age");
+	    	String pname = (String)obj.get("Parent's Name");
+	    	String age_cat = (String)obj.get("Age_Category");
+	    	String contact = (String)obj.get("Contact");
+	    	boolean rep = (boolean)obj.get("Vaccination_report_initialized");
+	    	//int credits = (Integer)obj.get("Credits");
+	    	Student_Model stu = new Student_Model(first,last,age,pname,contact,age_cat);
+	    	stu.setVacc_report_initialized(rep);
+	    	s.add(stu);
+		}
+		//cursor.close();
+	    unenrolled_student_list.addAll(s);
+		return unenrolled_student_list;
+	}
+   
+   public List<Student_Model> loadEnrolled_student_list() {
+		
+	    MongoClient mongoclient  = new MongoClient("localhost",27017);
+		DB db = mongoclient.getDB("Daycare");
+		DBCollection collection = db.getCollection("Student");
+		DBObject query = QueryBuilder.start("Section").is("").not().get();
+		DBObject query_n = new BasicDBObject("Section",new BasicDBObject("$ne",""));
+		DBCursor cursor = collection.find(query_n);
+		
+		List<Student_Model> s = new ArrayList<Student_Model>();
+		while(cursor.hasNext()) {
+			DBObject obj = cursor.next();
+	    	String first = (String)obj.get("First Name");
+	    	String last =(String)obj.get("Last Name");
+	    	int age = (Integer)obj.get("Age");
+	    	String pname = (String)obj.get("Parent's Name");
+	    	String age_cat = (String)obj.get("Age_Category");
+	    	String contact = (String)obj.get("Contact");
+	    	boolean rep = (boolean)obj.get("Vaccination_report_initialized");
+	    	Student_Model stu = new Student_Model(first,last,age,pname,contact,age_cat);
+	    	stu.setVacc_report_initialized(rep);
+	    	//int credits = (Integer)obj.get("Credits");
+	    	s.add(stu);
+		}
+		//cursor.close();
+	    enrolled_student_list.addAll(s);
+		return enrolled_student_list;
+	}
+  
+   public List<ClassRoom_Model> loadClasses(){
+	   MongoClient mongoclient  = new MongoClient("localhost",27017);
+		DB db = mongoclient.getDB("Daycare");
+		DBCollection collection = db.getCollection("Classes");
+		DBCursor cursor = collection.find();
+		List<ClassRoom_Model> c = new ArrayList<ClassRoom_Model>();
+		while(cursor.hasNext()) {
+			DBObject obj = cursor.next();
+	    	String sec_name = (String)obj.get("Section_Name");
+	    	String age_cat =(String)obj.get("Age_Category");
+	    	String teacher_count = (String)obj.get("Current_Teacher/Max_Teacher_Count");
+	    	String student_count = (String)obj.get("Current_Student/Max_Student_Count");
+	    	String[] vals = student_count.split("/");
+	    	int curr_count = Integer.valueOf(vals[0]);
+	    	int capacity = Integer.valueOf(vals[1]);
+	    	c.add(new ClassRoom_Model(age_cat,sec_name,capacity,curr_count));
+		}
+		classrooms.addAll(c);
+		return classrooms;
+   }
+   
+   
+   public List<Teacher_Model> getUnassigned_teacher_list(){
+	   return this.unassigned_teacher_list;
+   }
+
+   
+   
+   public void add_classroom(ClassRoom_Model classroom) {
+	   this.classrooms.add(classroom);
+   }
+   
+   public void remove_classroom(ClassRoom_Model classroom) {
+	   this.classrooms.remove(classroom);
+   }
+   
+   public void remove_classrooms(String sectionname) {
+	   for(ClassRoom_Model c: classrooms ) {
+		   if(c.get_Section_name().equalsIgnoreCase(sectionname)) {
+			   this.classrooms.remove(c);
+		   }
+	   }
+   }
+
+    private School_Model() {
+        this.classrooms = new ArrayList<ClassRoom_Model>();
+        this.classrooms = loadClasses();
+        this.unassigned_teacher_list = new ArrayList<Teacher_Model>();
+        this.unassigned_teacher_list = loadUnassigned_teacher_list();
+        this.assigned_teacher_list = new ArrayList<Teacher_Model>();
+        this.assigned_teacher_list = loadAssigned_teacher_list();
+        this.unenrolled_student_list = new ArrayList<Student_Model>();
+        this.unenrolled_student_list = loadUnenrolled_student_list();
+        this.enrolled_student_list = new ArrayList<Student_Model>();
+        this.enrolled_student_list = loadEnrolled_student_list();
+    }
+    
+    public static School_Model get_instance() {
+    	return instance;
+    }
+    
+    public void add_Student_unenrolled_student_list(Student_Model s) {
+    	this.unenrolled_student_list.add(s);
+    }
+    
+    public void add_Student_enrolled_student_list(Student_Model s) {
+    	this.enrolled_student_list.add(s);
+    }
+
+    public Student_Model remove_Student_enrolled_student_list(Student_Model s) {
+    	Student_Model to_ret = s;
+    	this.enrolled_student_list.remove(s);
+    	return to_ret;
+    }
+    
+    public Student_Model remove_Student_enrolled_student_list(String lname) {
+    	for(Student_Model s: enrolled_student_list) {
+    		if(s.getLname().equalsIgnoreCase(lname)) {
+    			Student_Model to_ret = s;
+    			this.enrolled_student_list.remove(s);
+    			return to_ret;
+    		}
+    	}
+    	return null;
+    }
+    
+    public Student_Model remove_Student_unenrolled_student_list(Student_Model s) {
+    	Student_Model to_ret = s;
+    	this.unenrolled_student_list.remove(s);
+    	return to_ret;
+    }
+    
+    public Student_Model remove_Student_unenrolled_student_list(String lname) {
+    	for(Student_Model s: unenrolled_student_list) {
+    		if(s.getLname().equalsIgnoreCase(lname)) {
+    			Student_Model to_ret = s;
+    			this.unenrolled_student_list.remove(s);
+    			return to_ret;
+    		}
+    	}
+    	return null;
+    }
+
+    public Student_Model get_Student_unenrolled_student_list(String lname) {
+    	for(Student_Model s: unenrolled_student_list) {
+    		if(s.getLname().equalsIgnoreCase(lname)) {
+    			Student_Model to_ret = s;
+    			return to_ret;
+    		}
+    	}
+    	return null;
+    }
+
+    public void add_Teacher_unassigned_teacher_list(Teacher_Model t) {
+    	this.unassigned_teacher_list.add(t);
+    }
+    
+    public void add_Teacher_assigned_teacher_list(Teacher_Model t) {
+    	this.assigned_teacher_list.add(t);
+    }
+    
+    public Teacher_Model remove_Teacher_assigned_teacher_list(Teacher_Model t) {
+    	Teacher_Model to_ret = t;
+    	this.assigned_teacher_list.remove(t);
+    	return to_ret;
+    }
+    
+    public Teacher_Model remove_Teacher_assigned_teacher_list(String lname) {
+    	for(Teacher_Model t: assigned_teacher_list) {
+    		if(t.getLname().equalsIgnoreCase(lname)) {
+    			Teacher_Model to_ret = t;
+    			this.assigned_teacher_list.remove(t);
+    			return to_ret;
+    		}
+    	}
+    	return null;
+    }
+    
+    public Teacher_Model remove_Teacher_unassigned_teacher_list(Teacher_Model t) {
+    	Teacher_Model to_ret = t;
+    	this.unassigned_teacher_list.remove(t);
+    	return to_ret;
+    }
+    
+    public Teacher_Model remove_Teacher_unassigned_teacher_list(String lname) {
+    	for(Teacher_Model t: unassigned_teacher_list) {
+    		if(t.getLname().equalsIgnoreCase(lname)) {
+    			Teacher_Model to_ret = t;
+    			this.unassigned_teacher_list.remove(t);
+    			return to_ret;
+    		}
+    	}
+    	return null;
+    }
+
+}

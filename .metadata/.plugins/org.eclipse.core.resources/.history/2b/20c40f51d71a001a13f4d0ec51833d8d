@@ -1,0 +1,24 @@
+package Helpers;
+import java.io.File;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import org.opencv.*;
+import 
+public class TesseractTest {
+public static void main(String[] args) {
+                System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+                Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
+                System.out.println("mat = " + mat.dump());
+     
+
+	Tesseract tess = new Tesseract();
+	try {
+		//System.loadLibrary("XLib");
+		tess.setDatapath("D:/Tess4J-3.4.8-src/Tess4J/tessdata");
+		String text = tess.doOCR(new File("C:/Users/amarn/OneDrive/Pictures/sec.jpg"));
+		System.out.println(text);
+	}catch(TesseractException e) {
+		e.printStackTrace();
+	}
+}
+}

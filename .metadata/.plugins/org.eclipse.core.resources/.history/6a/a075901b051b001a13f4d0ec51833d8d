@@ -1,0 +1,486 @@
+package bostonchildcare.View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+public class CurrentVaccinationReport_View extends JFrame {
+	private static final CurrentVaccinationReport_View instance = new CurrentVaccinationReport_View();
+	private JPanel contentPane;
+	private JLabel lblhepb;
+	private JLabel lblDtap;
+	private JLabel lblHib;
+	private JLabel lblPcv;
+	private JLabel lblIpv;
+	private JLabel lblIivlaiv;
+	private JLabel lblMmr ;
+	private JLabel lblVar;
+	private JLabel lblHepa;
+	private JLabel lblMenacwyr;
+	private JLabel lblTdap;
+	private JLabel lblHpv;
+	private JLabel lblMenb;
+	private JLabel lblPpsv;
+	private JLabel lblRv;
+	private JCheckBox ipv_1 ;
+	private JCheckBox ipv_2 ;
+	private JCheckBox ipv_3 ;
+	private JCheckBox ipv_4 ;
+	private JCheckBox pcv13_1;
+	private JCheckBox pcv13_2;
+	private JCheckBox pcv13_3;
+	private JCheckBox pcv13_4;
+	private JCheckBox hib_1 ;
+	private JCheckBox hib_2 ;
+	private JCheckBox hib_3 ;
+	private JCheckBox hib_4 ;
+	private JCheckBox dtap_1;
+	private JCheckBox dtap_2;
+	private JCheckBox dtap_3;
+	private JCheckBox dtap_4;
+	private JCheckBox dtap_5;
+	private JCheckBox ppsv23_1;
+	private JCheckBox menb_1;
+	private JCheckBox hpv_1;
+	private JCheckBox tdap_1;
+	private JCheckBox menacwyd_1;
+	private JCheckBox menacwyd_2;
+	private JCheckBox hepa_1;
+	private JCheckBox hepa_2;
+	private JCheckBox var_1;
+	private JCheckBox var_2;
+	private JCheckBox mmr_1;
+	private JCheckBox mmr_2;
+	private JCheckBox iiv_1;
+	private JCheckBox iiv_2;
+	private JCheckBox rv1_1;
+	private JCheckBox rv1_2;
+	private JCheckBox Hep_B_1;
+	private JCheckBox Hep_B_2;
+	private JCheckBox Hep_B_3;
+	private JButton btnNewButton;
+	private JLabel lblStudentName;
+	private JLabel curr_lbl;
+
+	
+
+	public JLabel getCurr_lbl() {
+		return curr_lbl;
+	}
+	public void setCurr_lbl(JLabel curr_lbl) {
+		this.curr_lbl = curr_lbl;
+	}
+	public JButton getBtnNewButton() {
+		return btnNewButton;
+	}
+	public JLabel getLblhepb() {
+		return lblhepb;
+	}
+	public JLabel getLblDtap() {
+		return lblDtap;
+	}
+	public JLabel getLblHib() {
+		return lblHib;
+	}
+	public JLabel getLblPcv() {
+		return lblPcv;
+	}
+	public JLabel getLblIpv() {
+		return lblIpv;
+	}
+	public JLabel getLblIivlaiv() {
+		return lblIivlaiv;
+	}
+	public JLabel getLblMmr() {
+		return lblMmr;
+	}
+	public JLabel getLblVar() {
+		return lblVar;
+	}
+	public JLabel getLblHepa() {
+		return lblHepa;
+	}
+	public JLabel getLblMenacwyr() {
+		return lblMenacwyr;
+	}
+	public JLabel getLblTdap() {
+		return lblTdap;
+	}
+	public JLabel getLblHpv() {
+		return lblHpv;
+	}
+	public JLabel getLblMenb() {
+		return lblMenb;
+	}
+	public JLabel getLblPpsv() {
+		return lblPpsv;
+	}
+	public JLabel getLblRv() {
+		return lblRv;
+	}
+	public JCheckBox getIpv_1() {
+		return ipv_1;
+	}
+	public JCheckBox getIpv_2() {
+		return ipv_2;
+	}
+	public JCheckBox getIpv_3() {
+		return ipv_3;
+	}
+	public JCheckBox getIpv_4() {
+		return ipv_4;
+	}
+	public JCheckBox getPcv13_1() {
+		return pcv13_1;
+	}
+	public JCheckBox getPcv13_2() {
+		return pcv13_2;
+	}
+	public JCheckBox getPcv13_3() {
+		return pcv13_3;
+	}
+	public JCheckBox getPcv13_4() {
+		return pcv13_4;
+	}
+	public JCheckBox getHib_1() {
+		return hib_1;
+	}
+	public JCheckBox getHib_2() {
+		return hib_2;
+	}
+	public JCheckBox getHib_3() {
+		return hib_3;
+	}
+	public JCheckBox getHib_4() {
+		return hib_4;
+	}
+	public JCheckBox getDtap_1() {
+		return dtap_1;
+	}
+	public JCheckBox getDtap_2() {
+		return dtap_2;
+	}
+	public JCheckBox getDtap_3() {
+		return dtap_3;
+	}
+	public JCheckBox getDtap_4() {
+		return dtap_4;
+	}
+	public JCheckBox getDtap_5() {
+		return dtap_5;
+	}
+	public JCheckBox getPpsv23_1() {
+		return ppsv23_1;
+	}
+	public JCheckBox getMenb_1() {
+		return menb_1;
+	}
+	public JCheckBox getHpv_1() {
+		return hpv_1;
+	}
+	public JCheckBox getTdap_1() {
+		return tdap_1;
+	}
+	public JCheckBox getMenacwyd_1() {
+		return menacwyd_1;
+	}
+	public JCheckBox getMenacwyd_2() {
+		return menacwyd_2;
+	}
+	public JCheckBox getHepa_1() {
+		return hepa_1;
+	}
+	public JCheckBox getHepa_2() {
+		return hepa_2;
+	}
+	public JCheckBox getVar_1() {
+		return var_1;
+	}
+	public JCheckBox getVar_2() {
+		return var_2;
+	}
+	public JCheckBox getMmr_1() {
+		return mmr_1;
+	}
+	public JCheckBox getMmr_2() {
+		return mmr_2;
+	}
+	public JCheckBox getIiv_1() {
+		return iiv_1;
+	}
+	public JCheckBox getIiv_2() {
+		return iiv_2;
+	}
+	public JCheckBox getRv1_1() {
+		return rv1_1;
+	}
+	public JCheckBox getRv1_2() {
+		return rv1_2;
+	}
+	public JCheckBox getHep_B_1() {
+		return Hep_B_1;
+	}
+	public JCheckBox getHep_B_2() {
+		return Hep_B_2;
+	}
+	public JCheckBox getHep_B_3() {
+		return Hep_B_3;
+	}
+	public static CurrentVaccinationReport_View get_instance() {
+		return instance;
+	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					CurrentVaccinationReport_View frame = new CurrentVaccinationReport_View();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public CurrentVaccinationReport_View() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 856, 656);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		lblhepb = new JLabel("Hep_B");
+		lblhepb.setBounds(29, 54, 56, 16);
+		contentPane.add(lblhepb);
+		
+		Hep_B_1 = new JCheckBox("Dose 1");
+		Hep_B_1.setBounds(121, 50, 113, 25);
+		contentPane.add(Hep_B_1);
+		
+		Hep_B_2 = new JCheckBox("Dose 2");
+		Hep_B_2.setBounds(280, 50, 113, 25);
+		contentPane.add(Hep_B_2);
+		
+		Hep_B_3 = new JCheckBox("Dose 3");
+		Hep_B_3.setBounds(443, 50, 113, 25);
+		contentPane.add(Hep_B_3);
+		
+		lblRv = new JLabel("RV1");
+		lblRv.setBounds(29, 83, 56, 16);
+		contentPane.add(lblRv);
+		
+		rv1_1 = new JCheckBox("Dose 1");
+		rv1_1.setBounds(121, 79, 113, 25);
+		contentPane.add(rv1_1);
+		
+		rv1_2 = new JCheckBox("Dose 2");
+		rv1_2.setBounds(280, 79, 113, 25);
+		contentPane.add(rv1_2);
+		
+		lblIivlaiv = new JLabel("IIV/LAIV");
+		lblIivlaiv.setBounds(29, 231, 56, 16);
+		contentPane.add(lblIivlaiv);
+		
+		iiv_1 = new JCheckBox("Dose 1");
+		iiv_1.setBounds(121, 227, 113, 25);
+		contentPane.add(iiv_1);
+		
+		iiv_2 = new JCheckBox("Dose 2");
+		iiv_2.setBounds(280, 227, 113, 25);
+		contentPane.add(iiv_2);
+		
+		lblMmr = new JLabel("MMR");
+		lblMmr.setBounds(29, 260, 56, 16);
+		contentPane.add(lblMmr);
+		
+		mmr_1 = new JCheckBox("Dose 1");
+		mmr_1.setBounds(121, 256, 113, 25);
+		contentPane.add(mmr_1);
+		
+		mmr_2 = new JCheckBox("Dose 2");
+		mmr_2.setBounds(280, 256, 113, 25);
+		contentPane.add(mmr_2);
+		
+		lblVar = new JLabel("VAR");
+		lblVar.setBounds(29, 289, 56, 16);
+		contentPane.add(lblVar);
+		
+		var_1 = new JCheckBox("Dose 1");
+		var_1.setBounds(121, 285, 113, 25);
+		contentPane.add(var_1);
+		
+		var_2 = new JCheckBox("Dose 2");
+		var_2.setBounds(280, 285, 113, 25);
+		contentPane.add(var_2);
+		
+		lblHepa = new JLabel("HepA");
+		lblHepa.setBounds(29, 318, 56, 16);
+		contentPane.add(lblHepa);
+		
+		hepa_1 = new JCheckBox("Dose 1");
+		hepa_1.setBounds(121, 314, 113, 25);
+		contentPane.add(hepa_1);
+		
+		hepa_2 = new JCheckBox("Dose 2");
+		hepa_2.setBounds(280, 314, 113, 25);
+		contentPane.add(hepa_2);
+		
+		lblMenacwyr = new JLabel("MenACWY-D");
+		lblMenacwyr.setBounds(29, 347, 72, 16);
+		contentPane.add(lblMenacwyr);
+		
+		menacwyd_1 = new JCheckBox("Dose 1");
+		menacwyd_1.setBounds(121, 343, 113, 25);
+		contentPane.add(menacwyd_1);
+		
+		menacwyd_2 = new JCheckBox("Dose 2");
+		menacwyd_2.setBounds(280, 343, 113, 25);
+		contentPane.add(menacwyd_2);
+		
+		lblTdap = new JLabel("Tdap");
+		lblTdap.setBounds(29, 376, 56, 16);
+		contentPane.add(lblTdap);
+		
+		tdap_1 = new JCheckBox("Dose 1");
+		tdap_1.setBounds(121, 372, 113, 25);
+		contentPane.add(tdap_1);
+		
+		lblHpv = new JLabel("HPV");
+		lblHpv.setBounds(29, 405, 56, 16);
+		contentPane.add(lblHpv);
+		
+		hpv_1 = new JCheckBox("Dose 1");
+		hpv_1.setBounds(121, 401, 113, 25);
+		contentPane.add(hpv_1);
+		
+		lblMenb = new JLabel("MenB");
+		lblMenb.setBounds(29, 434, 56, 16);
+		contentPane.add(lblMenb);
+		
+		menb_1 = new JCheckBox("Dose 1");
+		menb_1.setBounds(121, 430, 113, 25);
+		contentPane.add(menb_1);
+		
+		lblPpsv = new JLabel("PPSV23");
+		lblPpsv.setBounds(29, 463, 56, 16);
+		contentPane.add(lblPpsv);
+		
+		ppsv23_1 = new JCheckBox("Dose 1");
+		ppsv23_1.setBounds(121, 459, 113, 25);
+		contentPane.add(ppsv23_1);
+		
+		lblDtap = new JLabel("DTaP");
+		lblDtap.setBounds(29, 115, 56, 16);
+		contentPane.add(lblDtap);
+		
+		dtap_1 = new JCheckBox("Dose 1");
+		dtap_1.setBounds(121, 111, 113, 25);
+		contentPane.add(dtap_1);
+		
+		dtap_2 = new JCheckBox("Dose 2");
+		dtap_2.setBounds(280, 111, 113, 25);
+		contentPane.add(dtap_2);
+		
+		dtap_3 = new JCheckBox("Dose 3");
+		dtap_3.setBounds(443, 111, 113, 25);
+		contentPane.add(dtap_3);
+		
+		dtap_4 = new JCheckBox("Dose 4");
+		dtap_4.setBounds(571, 111, 113, 25);
+		contentPane.add(dtap_4);
+		
+		dtap_5 = new JCheckBox("Dose 5");
+		dtap_5.setBounds(688, 111, 113, 25);
+		contentPane.add(dtap_5);
+		
+		lblHib = new JLabel("Hib");
+		lblHib.setBounds(29, 144, 56, 16);
+		contentPane.add(lblHib);
+		
+		hib_1 = new JCheckBox("Dose 1");
+		hib_1.setBounds(121, 140, 113, 25);
+		contentPane.add(hib_1);
+		
+		hib_2 = new JCheckBox("Dose 2");
+		hib_2.setBounds(280, 140, 113, 25);
+		contentPane.add(hib_2);
+		
+		hib_3 = new JCheckBox("Dose 3");
+		hib_3.setBounds(443, 140, 113, 25);
+		contentPane.add(hib_3);
+		
+		hib_4 = new JCheckBox("Dose 4");
+		hib_4.setBounds(571, 140, 113, 25);
+		contentPane.add(hib_4);
+		
+		lblPcv = new JLabel("PCV13");
+		lblPcv.setBounds(29, 173, 56, 16);
+		contentPane.add(lblPcv);
+		
+		pcv13_1 = new JCheckBox("Dose 1");
+		pcv13_1.setBounds(121, 169, 113, 25);
+		contentPane.add(pcv13_1);
+		
+		pcv13_2 = new JCheckBox("Dose 2");
+		pcv13_2.setBounds(280, 169, 113, 25);
+		contentPane.add(pcv13_2);
+		
+		pcv13_3 = new JCheckBox("Dose 3");
+		pcv13_3.setBounds(443, 169, 113, 25);
+		contentPane.add(pcv13_3);
+		
+		pcv13_4 = new JCheckBox("Dose 4");
+		pcv13_4.setBounds(571, 169, 113, 25);
+		contentPane.add(pcv13_4);
+		
+		lblIpv = new JLabel("IPV");
+		lblIpv.setBounds(29, 202, 56, 16);
+		contentPane.add(lblIpv);
+		
+		ipv_1 = new JCheckBox("Dose 1");
+		ipv_1.setBounds(121, 198, 113, 25);
+		contentPane.add(ipv_1);
+		
+		ipv_2 = new JCheckBox("Dose 2");
+		ipv_2.setBounds(280, 198, 113, 25);
+		contentPane.add(ipv_2);
+		
+		ipv_3 = new JCheckBox("Dose 3");
+		ipv_3.setBounds(443, 198, 113, 25);
+		contentPane.add(ipv_3);
+		ipv_4 = new JCheckBox("Dose 4");
+		ipv_4.setBounds(571, 202, 113, 25);
+		contentPane.add(ipv_4);
+		
+		btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(704, 545, 97, 25);
+		contentPane.add(btnNewButton);
+		
+		lblStudentName = new JLabel("Student Name");
+		lblStudentName.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentName.setBounds(29, 13, 97, 16);
+		contentPane.add(lblStudentName);
+		
+		curr_lbl = new JLabel("");
+		curr_lbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		curr_lbl.setBounds(171, 13, 222, 16);
+		contentPane.add(curr_lbl);
+
+	}
+
+}

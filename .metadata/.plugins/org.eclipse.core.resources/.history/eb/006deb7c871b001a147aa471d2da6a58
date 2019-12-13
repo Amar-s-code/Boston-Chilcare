@@ -1,0 +1,139 @@
+package Helpers;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
+
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Student_Model;
+
+public class Vaccination_Issue {
+public static boolean is_there_issue(String fname,String lname) {
+	MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+	 DB db = mongoClient.getDB( "Daycare" );
+	 DBCollection coll = db.getCollection("Vaccination");
+	 DBObject query =  QueryBuilder.start("First Name").is(fname).and("Last Name").is(lname).get();
+	 DBCursor cursor = coll.find(query);
+	 while(cursor.hasNext()) {
+		 DBObject obj = cursor.next();
+		 Student_Model st = School_Model.get_instance().get_Student_enrolled_student_list(lname);
+		 LocalDate bd = st.getbirthdate();
+		 LocalDate cd = LocalDate.now();
+		 int months = Period.between(cd,bd).getMonths();
+		 List<Boolean> hep_b = (ArrayList<Boolean>)obj.get("Hep_B");
+			List<Boolean> rv_1 = (ArrayList<Boolean>)obj.get("RV1");
+			List<Boolean> DTAP = (ArrayList<Boolean>)obj.get("DTaP");
+			List<Boolean> Hib = (ArrayList<Boolean>)obj.get("Hib");
+			List<Boolean> PCV13 = (ArrayList<Boolean>)obj.get("PCV13");
+			List<Boolean> Ipv = (ArrayList<Boolean>)obj.get("IPV");
+			List<Boolean> Iiv = (ArrayList<Boolean>)obj.get("IIV");
+			List<Boolean> Mmr = (ArrayList<Boolean>)obj.get("MMR");
+			List<Boolean> Var = (ArrayList<Boolean>)obj.get("VAR");
+			List<Boolean> Hepa = (ArrayList<Boolean>)obj.get("Hep_A");
+			List<Boolean> Menacwy = (ArrayList<Boolean>)obj.get("MENACWY");
+			List<Boolean> Tdap = (ArrayList<Boolean>)obj.get("Tdap");
+			List<Boolean> Hpv = (ArrayList<Boolean>)obj.get("HPV");
+			List<Boolean> Menb = (ArrayList<Boolean>)obj.get("MenB");
+			List<Boolean> Ppsv23 = (ArrayList<Boolean>)obj.get("PPSV23");
+			
+		if(months<=12) {
+			if(hep_b.get(0)&hep_b.get(1)&
+					rv_1.get(0)&rv_1.get(1)&
+					DTAP.get(0)&DTAP.get(1)&DTAP.get(2)&
+					Hib.get(0)&Hib.get(1)&Hib.get(2)&
+					PCV13.get(0)&PCV13.get(1)&PCV13.get(2)&
+					Ipv.get(0)&Ipv.get(1)&
+					Iiv.get(0)) {
+			   return true;
+			}else {
+				return false;
+			} 
+		 }
+		 
+		
+		if(months>=15&months<=18) {
+			 if(hep_b.get(0)&hep_b.get(1)&
+						rv_1.get(0)&rv_1.get(1)&
+						DTAP.get(0)&DTAP.get(1)&DTAP.get(2)&
+						Hib.get(0)&Hib.get(1)&Hib.get(2)&
+						PCV13.get(0)&PCV13.get(1)&PCV13.get(2)&
+						Ipv.get(0)&Ipv.get(1)&
+						Iiv.get(0)&
+						hep_b.get(2)&
+						DTAP.get(3)&
+						Hib.get(3)&Hib.get(4)&
+						Mmr.get(0)&
+						Var.get(0)&
+						Hepa.get(0)&Hepa.get(1)
+						) {
+				   return true;
+				}else {
+					return false;
+				} 
+		 }
+		
+		
+		 if(months>18&months<=24) {
+			 if(hep_b.get(0)&hep_b.get(1)&
+						rv_1.get(0)&rv_1.get(1)&
+						DTAP.get(0)&DTAP.get(1)&DTAP.get(2)&
+						Hib.get(0)&Hib.get(1)&Hib.get(2)&
+						PCV13.get(0)&PCV13.get(1)&PCV13.get(2)&
+						Ipv.get(0)&Ipv.get(1)&
+						Hib.get(3)&Hib.get(4)&
+						Iiv.get(0)&
+						hep_b.get(2)&
+						DTAP.get(3)&
+						Hib.get(3)&Hib.get(4)&
+						Mmr.get(0)&
+						Var.get(0)&
+						Hepa.get(0)&
+						Ipv.get(2)&
+						Iiv.get(1)
+						) {
+				   return true;
+				}else {
+					return false;
+				} 
+		 }
+		 
+		 if(months>24) {
+			 if(hep_b.get(0)&hep_b.get(1)&
+						rv_1.get(0)&rv_1.get(1)&
+						DTAP.get(0)&DTAP.get(1)&DTAP.get(2)&
+						Hib.get(0)&Hib.get(1)&Hib.get(2)&
+						PCV13.get(0)&PCV13.get(1)&PCV13.get(2)&
+						Ipv.get(0)&Ipv.get(1)&
+						Hib.get(3)&Hib.get(4)&
+						Iiv.get(0)&
+						hep_b.get(2)&
+						DTAP.get(3)&
+						Hib.get(3)&Hib.get(4)&
+						Mmr.get(0)&
+						Var.get(0)&
+						Hepa.get(0)&
+						Ipv.get(2)&
+						Iiv.get(1)&
+						DTAP.get(4)&
+						Ipv.get(3)&
+						Mmr.get(1)&
+						Var.get(1)&
+						Hepa.get(1)
+						) {
+				   return true;
+				}else {
+					return false;
+				} 
+		 }
+	}
+	return false;
+} 
+}

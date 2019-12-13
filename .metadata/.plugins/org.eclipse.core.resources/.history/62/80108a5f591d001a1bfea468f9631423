@@ -1,0 +1,127 @@
+package bostonchildcare.Controller;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.QueryBuilder;
+
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Student_Model;
+import bostonchildcare.View.StudentTeacher_Office_View;
+
+public class StudentTeacher_Office_Controller {
+private static final StudentTeacher_Office_Controller instance = new StudentTeacher_Office_Controller();
+private StudentTeacher_Office_View sview;
+private Vaccination_Controller vcontr;
+private StudentEnrollment_Controller scontr;
+private Enrolled_Student_Controller sencontr;
+private Assign_Class_Controller asscontr;
+private ClassStudents_Controller class_stud_contr;
+
+public static StudentTeacher_Office_Controller get_instance() {
+	return instance;
+}
+
+private StudentTeacher_Office_Controller() {
+	this.sview = StudentTeacher_Office_View.get_instance();
+	initController();
+}
+
+public void initController() {
+	sview.setVisible(true);
+	sview.getNewstuenrol_btn().addActionListener(l->nav_to_stud_enrollment());
+sview.getLogout_btn().addActionListener(l->logout());
+	sview.getEnrolledstu_btn().addActionListener(l->enrolled_stud());
+	sview.getAssignClass_btn().addActionListener(l->nav_assign_class());
+	sview.getTeachers_btn().addActionListener(l->nav_class_stud());
+	sview.getLoad_reg_stu_btn().addActionListener(l->call_to_atlas());
+}
+
+public void call_to_atlas() {
+	MongoClient mongoClient_local = new MongoClient( "localhost" , 27017 );
+	MongoClientURI uri = new MongoClientURI(
+		    "mongodb+srv://amar:mathisfun@mydaycare-i8kor.mongodb.net/test?retryWrites=true&w=majority");
+
+	MongoClient mongoClient_atlas = new MongoClient(uri);
+	DB db = mongoClient_atlas.getDB("Mongobackup");
+	DBCollection coll = db.getCollection("students");
+	DBCursor cursor = coll.find();
+	while(cursor.hasNext()) {
+		DBObject obj = cursor.next();
+		String fname = (String)obj.get("firstname");
+		 String lname = (String)obj.get("lastname");
+		 String pfname = (String)obj.get("pfname");
+		 String plname = (String)obj.get("plname");
+		 String emailid  = (String)obj.get("emailid");
+		 String agecat="";
+		 int age = Integer.parseInt((String)obj.get("age"));
+		 if(age>=6&age<=12) {
+			 agecat="6-12";
+		 }else if(age>=13&age<=24) {
+			agecat="13-24"; 
+		 }else if(age>=25&age<=36) {
+			 agecat="25-36"; 
+		 }else if(age>=37&age<=48) {
+		agecat="37-48"; 
+		}else if(age>=49&age<=60) {
+		agecat="49-60"; 
+		}else if(age>=61&age<=72) {
+		agecat="61-72"; 
+		}
+		Student_Model s = new Student_Model(fname,lname,age,pfname+" "+plname,emailid,agecat);
+		DB db_local = mongoClient_local.getDB("Daycare");
+		DBCollection coll_local = db_local.getCollection("Student");
+		DBObject jin = new BasicDBObject("First Name",s.getFname()).append("Last Name", s.getLname()).append("Age", s.getAge()).append("Section","").append("Parent's Name", s.getPname()).append("Age Category", s.getAge_cat()).append("BirthDate",s.getbirthdate()).append("Registration_date", s.getRegdate()).append("Vaccination_report_initialized", false);
+		coll_local.insert(jin);
+		DBObject query= QueryBuilder.start("firstname").is(s.getFname()).and("lastname").is(s.getLname()).get();
+		coll.remove(query);
+		
+		//School_Model.get_instance().add_Student_unenrolled_student_list(); 
+		System.out.println(fname+" "+agecat); 
+	}
+	 
+	
+}
+
+public void nav_class_stud() {
+	//class_stud_contr = class_stud_contr.get_instance();
+	this.class_stud_contr = ClassStudents_Controller.get_instance();
+	this.class_stud_contr.initController();
+}
+
+public void nav_vaccine() {
+	sview.setVisible(false);
+	this.vcontr = Vaccination_Controller.get_instance();
+	//this.vcontr.initController();
+}
+
+public void nav_assign_class() {
+	sview.setVisible(false);
+	asscontr = Assign_Class_Controller.get_instance();
+	asscontr.initController();
+}
+
+public void enrolled_stud() {
+	sview.setVisible(false);
+	sencontr = Enrolled_Student_Controller.get_instance();
+	sencontr.initController();
+}
+
+
+public void nav_to_stud_enrollment() {
+	sview.setVisible(false);
+	scontr.get_instance();
+}
+
+public void logout() {
+	sview.setVisible(false);
+	Login_Controller.get_instance().initController();
+}
+
+
+
+}

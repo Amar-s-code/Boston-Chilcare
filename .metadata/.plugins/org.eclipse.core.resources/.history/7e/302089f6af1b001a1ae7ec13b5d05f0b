@@ -1,0 +1,77 @@
+package bostonchildcare.Controller;
+
+import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
+
+import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Teacher_Model;
+import bostonchildcare.View.New_Teacher_Enrollment_View;
+
+public class New_Teacher_Enrollment_Controller {
+private New_Teacher_Enrollment_View new_teacher_enrollment_view;
+private Create_Class_Controller create_class_contr;
+
+public New_Teacher_Enrollment_Controller() {
+	this.new_teacher_enrollment_view = New_Teacher_Enrollment_View.get_instance();
+	initController();
+}
+
+public void initController() {
+	new_teacher_enrollment_view.setVisible(true);
+	JButton enroll_teacher = new_teacher_enrollment_view.getEnroll_teacher_btn();
+	JButton back_btn = new_teacher_enrollment_view.getBack_btn();
+	back_btn.addActionListener(l->goBack());
+	enroll_teacher.addActionListener(e->addTeacher());
+}
+
+public void goBack() {
+	new_teacher_enrollment_view.setVisible(false);
+	this.create_class_contr = Create_Class_Controller.get_instance();
+	create_class_contr.initController();
+}
+
+public void addTeacher() {
+	String fname = new_teacher_enrollment_view.getFname_field().getText();
+	String lname = new_teacher_enrollment_view.getLname_field().getText();
+	int age = Integer.valueOf(((new_teacher_enrollment_view.getAge_ft_field().getText().trim().isEmpty()))?"0":new_teacher_enrollment_view.getAge_ft_field().getText());
+	int credits = Integer.valueOf((new_teacher_enrollment_view.getCredits_ft_field().getText().trim().isEmpty())?"0":new_teacher_enrollment_view.getCredits_ft_field().getText());
+	String age_cat = new_teacher_enrollment_view.getAge_cat_combo().getSelectedItem().toString();
+	Teacher_Model t = new Teacher_Model(credits,fname,lname,age,age_cat,"");
+	School_Model.get_instance().add_Teacher_unassigned_teacher_list(t);
+	ServerAddress uri = new ServerAddress( "mongodb+srv://amar:mathisfun@mydaycare-i8kor.mongodb.net/test?retryWrites=true&w=majority");
+	MongoClientOptions options = MongoClientOptions.builder().serverSelectionTimeout(30).build();
+	//MongoClientURI uri = new MongoClientURI(
+	//	    "mongodb+srv://amar:mathisfun@mydaycare-i8kor.mongodb.net/test?retryWrites=true&w=majority");
+	//MongoClient mongoClient = new MongoClient( uri);
+	 //DB db = mongoClient.getDB(  );
+	MongoClient mongoclient = new MongoClient(uri,options);
+	MongoDatabase database = mongoclient.getDatabase("Mongobackup");
+	MongoCollection<Document> teachercollection = database.getCollection("Teacher");
+	Document document = new Document();
+	document.append("First Name", fname);
+	document.append("Last Name", lname);
+	document.append("Age", age);
+	document.append("Credits", credits);
+	document.append("Age_Category", age_cat);
+	document.append("assigned", false);
+	document.append("assigned_section", "");
+	teachercollection.insertOne(document);	
+
+}
+
+}

@@ -1,0 +1,53 @@
+package Helpers;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
+
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Student_Model;
+
+public class Vaccination_Issue {
+public static boolean is_there_issue(String fname,String lname) {
+	MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+	 DB db = mongoClient.getDB( "Daycare" );
+	 DBCollection coll = db.getCollection("Vaccination");
+	 DBObject query =  QueryBuilder.start("First Name").is(fname).and("Last Name").is(lname).get();
+	 DBCursor cursor = coll.find(query);
+	 while(cursor.hasNext()) {
+		 DBObject obj = cursor.next();
+		 Student_Model st = School_Model.get_instance().get_Student_enrolled_student_list(lname);
+		 LocalDate bd = st.getbirthdate();
+		 LocalDate cd = LocalDate.now();
+		 int months = Period.between(cd,bd).getMonths();
+		 List<Boolean> hep_b = (ArrayList<Boolean>)obj.get("Hep_B");
+			List<Boolean> rv_1 = (ArrayList<Boolean>)obj.get("RV1");
+			List<Boolean> DTAP = (ArrayList<Boolean>)obj.get("DTaP");
+			List<Boolean> Hib = (ArrayList<Boolean>)obj.get("Hib");
+			List<Boolean> PCV13 = (ArrayList<Boolean>)obj.get("PCV13");
+			List<Boolean> Ipv = (ArrayList<Boolean>)obj.get("IPV");
+			List<Boolean> Iiv = (ArrayList<Boolean>)obj.get("IIV");
+			List<Boolean> Mmr = (ArrayList<Boolean>)obj.get("MMR");
+			List<Boolean> Var = (ArrayList<Boolean>)obj.get("VAR");
+			List<Boolean> Hepa = (ArrayList<Boolean>)obj.get("Hep_A");
+			List<Boolean> Menacwy = (ArrayList<Boolean>)obj.get("MENACWY");
+			List<Boolean> Tdap = (ArrayList<Boolean>)obj.get("Tdap");
+			List<Boolean> Hpv = (ArrayList<Boolean>)obj.get("HPV");
+			List<Boolean> Menb = (ArrayList<Boolean>)obj.get("MenB");
+			List<Boolean> Ppsv23 = (ArrayList<Boolean>)obj.get("PPSV23");		 
+		 if(months<12) {
+			// if(hep_b.get(0)&hep_b.get(1)&rv_1.get(0)&rv_1.get(1)) 
+		 }
+	//	 String ln =(String)obj.get("First Name");
+	}
+	return false;
+} 
+}

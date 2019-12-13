@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
+              <Component id="jLabel7" min="-2" pref="194" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="sage_label" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="pfname_label" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="plname_label" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="contact_label" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="sfname_label" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="slname_label" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="cancel_button" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="48" max="32767" attributes="0"/>
+                      <Component id="submit_button" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="plname_field" max="32767" attributes="0"/>
+                  <Component id="pfname_field" alignment="0" max="32767" attributes="0"/>
+                  <Component id="slname_field" max="32767" attributes="0"/>
+                  <Component id="sfname_field" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sage_field" max="32767" attributes="0"/>
+                  <Component id="contact_field" alignment="0" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="30" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="sfname_label" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="sfname_field" alignment="1" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="slname_label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="slname_field" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="sage_label" min="-2" max="-2" attributes="0"/>
+                  <Component id="sage_field" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="pfname_label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="pfname_field" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="plname_label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="plname_field" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="contact_label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="contact_field" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="submit_button" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cancel_button" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="sfname_label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Student&apos;s FirstName"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="sfname_field">
+    </Component>
+    <Component class="javax.swing.JLabel" name="slname_label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Student&apos;s LastName"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="slname_field">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="slname_fieldActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="sage_label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Student&apos;s Age(months)"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="pfname_label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Parent&apos;s FirstName"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="plname_label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Parent&apos;s LastName"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="contact_label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Contact E-mail"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="pfname_field">
+    </Component>
+    <Component class="javax.swing.JTextField" name="plname_field">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel7">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Times New Roman" size="14" style="3"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="New Student Enrollment Form"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="submit_button">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Submit"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submit_buttonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="cancel_button">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cancel"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JFormattedTextField" name="sage_field">
+      <Properties>
+        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+          <Format format="##" subtype="-1" type="5"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JFormattedTextField" name="contact_field">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contact_fieldActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>

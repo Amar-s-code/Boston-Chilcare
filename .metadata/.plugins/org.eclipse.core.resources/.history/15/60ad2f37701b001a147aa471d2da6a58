@@ -1,0 +1,243 @@
+package bostonchildcare.Controller;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+
+import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
+
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Student_Model;
+import bostonchildcare.View.Vaccination_View;
+
+public class Vaccination_Controller {
+private Vaccination_View v_view;
+private static final Vaccination_Controller instance = new Vaccination_Controller();
+private Enrolled_Student_Controller enr_stu_contrl;
+private Vaccination_Controller() {
+	
+}
+
+public static Vaccination_Controller get_instance() {
+	return instance;
+}
+
+public void initController(String fname,String lname) {
+	this.v_view = Vaccination_View.get_instance();
+	this.v_view.setVisible(true);
+	v_view.getCurr_lbl().setText(fname+" "+lname);
+	load_vaccination(fname,lname);
+	v_view.getBtnNewButton().addActionListener(l->save_status(fname,lname));
+	v_view.getBtnBack().addActionListener(l->go_back());
+//	boolean hepb1 = v_view.getHep_B_1().isSelected();
+//	System.out.println(hepb1);
+	
+}
+
+public void go_back() {
+	v_view.setVisible(false);
+	enr_stu_contrl.get_instance().initController();
+}
+
+public void load_vaccination(String fname,String lname) {
+	MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+	DB db = mongoClient.getDB( "Daycare" );
+	DBCollection coll = db.getCollection("Vaccination");
+	DBObject query = QueryBuilder.start("First Name").is(fname).and("Last Name").is(lname).get();
+	DBObject obj = coll.findOne(query);
+	List<Boolean> hep_b = (ArrayList<Boolean>)obj.get("Hep_B");
+	List<Boolean> rv_1 = (ArrayList<Boolean>)obj.get("RV1");
+	List<Boolean> DTAP = (ArrayList<Boolean>)obj.get("DTaP");
+	List<Boolean> Hib = (ArrayList<Boolean>)obj.get("Hib");
+	List<Boolean> PCV13 = (ArrayList<Boolean>)obj.get("PCV13");
+	List<Boolean> Ipv = (ArrayList<Boolean>)obj.get("IPV");
+	List<Boolean> Iiv = (ArrayList<Boolean>)obj.get("IIV");
+	List<Boolean> Mmr = (ArrayList<Boolean>)obj.get("MMR");
+	List<Boolean> Var = (ArrayList<Boolean>)obj.get("VAR");
+	List<Boolean> Hepa = (ArrayList<Boolean>)obj.get("Hep_A");
+	List<Boolean> Menacwy = (ArrayList<Boolean>)obj.get("MENACWY");
+	List<Boolean> Tdap = (ArrayList<Boolean>)obj.get("Tdap");
+	List<Boolean> Hpv = (ArrayList<Boolean>)obj.get("HPV");
+	List<Boolean> Menb = (ArrayList<Boolean>)obj.get("MenB");
+	List<Boolean> Ppsv23 = (ArrayList<Boolean>)obj.get("PPSV23");
+	List<JCheckBox> hepb = new ArrayList<JCheckBox>();
+	List<JCheckBox> rv1 = new ArrayList<JCheckBox>();
+	List<JCheckBox> dtap = new ArrayList<JCheckBox>();
+	List<JCheckBox> hib = new ArrayList<JCheckBox>();
+	List<JCheckBox> pcv = new ArrayList<JCheckBox>();
+	List<JCheckBox> ipv = new ArrayList<JCheckBox>();
+	List<JCheckBox> iiv = new ArrayList<JCheckBox>();
+	List<JCheckBox> mmr = new ArrayList<JCheckBox>();
+	List<JCheckBox> var = new ArrayList<JCheckBox>();
+	List<JCheckBox> hepa = new ArrayList<JCheckBox>();
+	List<JCheckBox> menacwy = new ArrayList<JCheckBox>();
+	List<JCheckBox> tdap = new ArrayList<JCheckBox>();
+	List<JCheckBox> hpv = new ArrayList<JCheckBox>();
+	List<JCheckBox> menb = new ArrayList<JCheckBox>();
+	List<JCheckBox> ppsv23 = new ArrayList<JCheckBox>();
+	
+	hepb.addAll(Arrays.asList(v_view.getHep_B_1(),v_view.getHep_B_2(),v_view.getHep_B_3()));
+	rv1.addAll(Arrays.asList(v_view.getRv1_1(),v_view.getRv1_2()));
+	dtap.addAll(Arrays.asList(v_view.getDtap_1(),v_view.getDtap_2(),v_view.getDtap_3(),v_view.getDtap_4(),v_view.getDtap_5()));
+	hib.addAll(Arrays.asList(v_view.getHib_1(),v_view.getHib_2(),v_view.getHib_3(),v_view.getHib_4()));
+	pcv.addAll(Arrays.asList(v_view.getPcv13_1(),v_view.getPcv13_2(),v_view.getPcv13_3(),v_view.getPcv13_4()));
+	ipv.addAll(Arrays.asList(v_view.getIpv_1(),v_view.getIpv_2(),v_view.getIpv_3(),v_view.getIpv_4()));
+	iiv.addAll(Arrays.asList(v_view.getIiv_1(),v_view.getIiv_2()));
+	mmr.addAll(Arrays.asList(v_view.getMmr_1(),v_view.getMmr_2()));
+	var.addAll(Arrays.asList(v_view.getVar_1(),v_view.getVar_2()));
+	hepa.addAll(Arrays.asList(v_view.getHepa_1(),v_view.getHepa_2()));
+	menacwy.addAll(Arrays.asList(v_view.getMenacwyd_1(),v_view.getMenacwyd_2()));
+	tdap.addAll(Arrays.asList(v_view.getTdap_1()));
+	hpv.addAll(Arrays.asList(v_view.getHpv_1()));
+	menb.addAll(Arrays.asList(v_view.getMenb_1()));
+	ppsv23.addAll(Arrays.asList(v_view.getPpsv23_1()));
+	for(int i=0;i<hepb.size();i++) {
+		hepb.get(i).setSelected(hep_b.get(i));
+	}
+	for(int i=0;i<rv1.size();i++) {
+		rv1.get(i).setSelected(rv_1.get(i));
+	}
+	for(int i=0;i<dtap.size();i++) {
+		dtap.get(i).setSelected(DTAP.get(i));
+	}
+	for(int i=0;i<hib.size();i++) {
+		hib.get(i).setSelected(Hib.get(i));
+	}
+	for(int i=0;i<pcv.size();i++) {
+		pcv.get(i).setSelected(PCV13.get(i));
+	}
+	for(int i=0;i<ipv.size();i++) {
+		ipv.get(i).setSelected(Ipv.get(i));
+	}
+	for(int i=0;i<iiv.size();i++) {
+		iiv.get(i).setSelected(Iiv.get(i));
+	}
+	for(int i=0;i<mmr.size();i++) {
+		mmr.get(i).setSelected(Mmr.get(i));
+	}
+	for(int i=0;i<var.size();i++) {
+		var.get(i).setSelected(Var.get(i));
+	}
+	for(int i=0;i<hepa.size();i++) {
+		hepa.get(i).setSelected(Hepa.get(i));
+	}
+	for(int i=0;i<menacwy.size();i++) {
+		menacwy.get(i).setSelected(Menacwy.get(i));
+	}
+	for(int i=0;i<tdap.size();i++) {
+		tdap.get(i).setSelected(Tdap.get(i));
+	}
+	for(int i=0;i<hpv.size();i++) {
+		hpv.get(i).setSelected(Hpv.get(i));
+	}
+	for(int i=0;i<menb.size();i++) {
+		menb.get(i).setSelected(Menb.get(i));
+	}
+	for(int i=0;i<ppsv23.size();i++) {
+		ppsv23.get(i).setSelected(Ppsv23.get(i));
+	}
+}
+
+public void save_status(String fname,String lname) {
+	MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+	DB db = mongoClient.getDB( "Daycare" );
+	DBCollection coll = db.getCollection("Vaccination");
+	DBCollection coll_s = db.getCollection("Student");
+	boolean hepb1 = v_view.getHep_B_1().isSelected();
+	boolean hepb2 = v_view.getHep_B_2().isSelected();
+	boolean hepb3 = v_view.getHep_B_3().isSelected();
+	List<Boolean> hep_b = new ArrayList<Boolean>(Arrays.asList(hepb1,hepb2,hepb3));
+	boolean rv11 = v_view.getRv1_1().isSelected();
+	boolean rv12 = v_view.getRv1_2().isSelected();
+	List<Boolean> rv_1 = new ArrayList<Boolean>(Arrays.asList(rv11,rv12));
+	boolean dtap1 = v_view.getDtap_1().isSelected();
+	boolean dtap2 = v_view.getDtap_2().isSelected();
+	boolean dtap3 = v_view.getDtap_3().isSelected();
+	boolean dtap4 = v_view.getDtap_4().isSelected();
+	boolean dtap5 = v_view.getDtap_5().isSelected();
+	List<Boolean> dtap = new ArrayList<Boolean>(Arrays.asList(dtap1,dtap2,dtap3,dtap4,dtap5));
+	boolean hib1 = v_view.getHib_1().isSelected();
+	boolean hib2 = v_view.getHib_2().isSelected();
+	boolean hib3 = v_view.getHib_3().isSelected();
+	boolean hib4 = v_view.getHib_4().isSelected();
+	List<Boolean> hib = new ArrayList<Boolean>(Arrays.asList(hib1,hib2,hib3,hib4));
+	boolean pcv131 = v_view.getPcv13_1().isSelected();
+	boolean pcv132 = v_view.getPcv13_2().isSelected();
+	boolean pcv133 = v_view.getPcv13_3().isSelected();
+	boolean pcv134 = v_view.getPcv13_4().isSelected();
+	List<Boolean> pcv13 = new ArrayList<Boolean>(Arrays.asList(pcv131,pcv132,pcv133,pcv134));
+	boolean ipv1 = v_view.getIpv_1().isSelected();
+	boolean ipv2 = v_view.getIpv_2().isSelected();
+	boolean ipv3 = v_view.getIpv_3().isSelected();
+	boolean ipv4 = v_view.getIpv_4().isSelected();
+	List<Boolean> ipv = new ArrayList<Boolean>(Arrays.asList(ipv1,ipv2,ipv3,ipv4));
+	
+	boolean iiv1 = v_view.getIiv_1().isSelected();
+	boolean iiv2 = v_view.getIiv_2().isSelected();
+	List<Boolean> iiv = new ArrayList<Boolean>(Arrays.asList(iiv1,iiv2));
+	
+	boolean mmr1 = v_view.getMmr_1().isSelected();
+	boolean mmr2 = v_view.getMmr_2().isSelected();
+	List<Boolean> mmr = new ArrayList<Boolean>(Arrays.asList(mmr1,mmr2));
+	
+	boolean var1 = v_view.getVar_1().isSelected();
+	boolean var2 = v_view.getVar_2().isSelected();
+	List<Boolean> var = new ArrayList<Boolean>(Arrays.asList(var1,var2));
+	
+	boolean hepa1 = v_view.getHepa_1().isSelected();
+	boolean hepa2 = v_view.getHepa_2().isSelected();
+	List<Boolean> hepa = new ArrayList<Boolean>(Arrays.asList(hepa1,hepa2));
+	
+	boolean menacwy1 = v_view.getMenacwyd_1().isSelected();
+	boolean menacwy2 = v_view.getMenacwyd_2().isSelected();
+	List<Boolean> menacwy = new ArrayList<Boolean>(Arrays.asList(menacwy1,menacwy2));
+	
+	boolean tdap1= v_view.getMenacwyd_2().isSelected();
+	List<Boolean> tdap = new ArrayList<Boolean>(Arrays.asList(tdap1));
+	
+	boolean hpv1 = v_view.getMenacwyd_2().isSelected();
+	List<Boolean> hpv = new ArrayList<Boolean>(Arrays.asList(hpv1));
+	
+	boolean menb1 = v_view.getMenacwyd_2().isSelected();
+	List<Boolean> menb = new ArrayList<Boolean>(Arrays.asList(menb1));
+	
+	boolean ppsv231 = v_view.getMenacwyd_2().isSelected();
+	List<Boolean> ppsv23 = new ArrayList<Boolean>(Arrays.asList(ppsv231));
+	
+	
+	//BasicDBObject doc = new BasicDBObject("First Name",fname).append("Last Name",lname).append("Hep_B", hep_b).append("RV1", rv_1).append("DTaP", dtap).append("Hib", hib).append("PCV13",pcv13).append("IPV", ipv).append("IIV", iiv).append("MMR", mmr).append("VAR", var).append("Hep_A", hepa).append("MENACWY", menacwy).append("Tdap", tdap).append("HPV", hpv).append("MenB", menb).append("PPSV23", ppsv23);
+	//coll.insert(doc);
+	BasicDBObject newdoc = new BasicDBObject();
+	newdoc.append("$set", new BasicDBObject().append("Hep_B", hep_b).append("RV1", rv_1).append("DTaP", dtap).append("Hib", hib).append("PCV13",pcv13).append("IPV", ipv).append("IIV", iiv).append("MMR", mmr).append("VAR", var).append("Hep_A", hepa).append("MENACWY", menacwy).append("Tdap", tdap).append("HPV", hpv).append("MenB", menb).append("PPSV23", ppsv23));
+	BasicDBObject searchquery = new BasicDBObject().append("First Name", fname).append("Last Name", lname);
+	coll.update(searchquery, newdoc);
+	coll_s.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("Vaccination_report_initialized",true)) );
+	for(Student_Model s:School_Model.get_instance().getUnenrolled_student_list()) {
+		if(s.getFname().equalsIgnoreCase(fname)) {
+		 School_Model.get_instance().remove_Student_unenrolled_student_list(s);
+		 //s.setVacc_report_initialized(true);
+		 //School_Model.get_instance().add_Student_enrolled_student_list(s);
+		}
+	}
+	
+	//coll.update("$set", doc);
+	
+	//System.out.println(hepb1);
+	//Document doc = new Document();
+	
+	
+	
+}
+}

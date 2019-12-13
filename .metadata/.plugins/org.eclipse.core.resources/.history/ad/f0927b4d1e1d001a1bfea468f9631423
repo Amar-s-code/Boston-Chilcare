@@ -1,0 +1,73 @@
+package bostonchildcare.Controller;
+
+import bostonchildcare.View.StudentTeacher_Office_View;
+
+public class StudentTeacher_Office_Controller {
+private static final StudentTeacher_Office_Controller instance = new StudentTeacher_Office_Controller();
+private StudentTeacher_Office_View sview;
+private Vaccination_Controller vcontr;
+private StudentEnrollment_Controller scontr;
+private Enrolled_Student_Controller sencontr;
+private Assign_Class_Controller asscontr;
+private ClassStudents_Controller class_stud_contr;
+
+public static StudentTeacher_Office_Controller get_instance() {
+	return instance;
+}
+
+private StudentTeacher_Office_Controller() {
+	this.sview = StudentTeacher_Office_View.get_instance();
+	initController();
+}
+
+public void initController() {
+	sview.setVisible(true);
+	sview.getNewstuenrol_btn().addActionListener(l->nav_to_stud_enrollment());
+sview.getLogout_btn().addActionListener(l->logout());
+	sview.getEnrolledstu_btn().addActionListener(l->enrolled_stud());
+	sview.getAssignClass_btn().addActionListener(l->nav_assign_class());
+	sview.getTeachers_btn().addActionListener(l->nav_class_stud());
+	sview.getLoad_reg_stu_btn().addActionListener(l->call_to_atlas());
+}
+
+public void call_to_atlas() {
+	
+}
+
+public void nav_class_stud() {
+	//class_stud_contr = class_stud_contr.get_instance();
+	class_stud_contr.get_instance().initController();
+}
+
+public void nav_vaccine() {
+	sview.setVisible(false);
+	this.vcontr = Vaccination_Controller.get_instance();
+	//this.vcontr.initController();
+}
+
+public void nav_assign_class() {
+	sview.setVisible(false);
+	asscontr = Assign_Class_Controller.get_instance();
+	asscontr.initController();
+}
+
+public void enrolled_stud() {
+	sview.setVisible(false);
+	sencontr = Enrolled_Student_Controller.get_instance();
+	sencontr.initController();
+}
+
+
+public void nav_to_stud_enrollment() {
+	sview.setVisible(false);
+	scontr.get_instance();
+}
+
+public void logout() {
+	sview.setVisible(false);
+	Login_Controller.get_instance().initController();
+}
+
+
+
+}

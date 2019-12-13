@@ -1,0 +1,5 @@
+package bostonchildcare.Controller;
+
+public class CurrentVaccinationReport_Controller {
+
+}

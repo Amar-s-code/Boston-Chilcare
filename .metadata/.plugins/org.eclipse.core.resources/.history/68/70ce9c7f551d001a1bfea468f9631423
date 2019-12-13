@@ -1,0 +1,366 @@
+package bostonchildcare.Controller;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import org.bson.BSONObject;
+import org.bson.Document;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
+import com.mongodb.QueryBuilder;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import bostonchildcare.Model.ClassRoom_Model;
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Teacher_Model;
+import bostonchildcare.View.Create_Class_View;
+import bostonchildcare.View.New_Teacher_Enrollment_View;
+
+public class Create_Class_Controller {
+	private static final Create_Class_Controller instance = new Create_Class_Controller();
+	private Admin_School_Frame_Controller admin_contr;
+	private Create_Class_View create_class_view;
+	private New_Teacher_Enrollment_Controller new_teacher_contr;
+	
+	public static Create_Class_Controller get_instance() {
+		return instance;
+	}
+	
+	private Create_Class_Controller() {
+		this.create_class_view = Create_Class_View.get_instance();
+	}
+
+	public void initController() {
+		
+		load_data();
+		create_class_view.setVisible(true);
+		JButton teacher_enroll_btn = create_class_view.getTeacher_enroll_btn();
+		JComboBox<String> combo_btn = create_class_view.getAge_cat_combo();
+		JButton back_btn = create_class_view.getBack_btn();
+		JButton create_class_btn = create_class_view.getCreate_class_btn();
+		combo_btn.addActionListener(l->load_data());
+		back_btn.addActionListener(i->go_back());
+		create_class_btn.addActionListener(j->create_class());
+		teacher_enroll_btn.addActionListener(e->nav_teacher_enrollment());
+	}
+	
+	public void nav_teacher_enrollment() {
+		create_class_view.setVisible(false);
+		new_teacher_contr = new New_Teacher_Enrollment_Controller();
+		new_teacher_contr.initController();
+		
+	}
+	
+	public void go_back() {
+		create_class_view.setVisible(false);
+		this.admin_contr = Admin_School_Frame_Controller.get_instance();
+		admin_contr.initController();
+	}
+	
+	public void load_data() {
+		MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+		DB db = mongoClient.getDB( "Daycare" );
+		JTable tab = create_class_view.getTable();
+		DBCursor cursor = null;
+		    //DB db = mongoClient.getDB( "Mongobackup" );
+		    DBCollection coll = db.getCollection("Teacher");
+		    DBObject query = QueryBuilder.start("Age_Category").is(create_class_view.getAge_cat_combo().getSelectedItem().toString()).get();
+		    cursor = coll.find(query);
+		    
+		    String[] columnnames = {"First Name","Last Name","Age","Age_Category","Credits"};
+		    DefaultTableModel model = new DefaultTableModel(columnnames,0);
+		    while(cursor.hasNext()) {
+		    	DBObject obj = cursor.next();
+		    	if(obj.get("assigned").equals(false)) {
+		    	String first = (String)obj.get("First Name");
+		    	String last =(String)obj.get("Last Name");
+		    	int age = (Integer)obj.get("Age");
+		    	String age_cat = (String)obj.get("Age_Category");
+		    	int credits = (Integer)obj.get("Credits");
+		    	model.addRow(new Object[] { first, last,age,age_cat,credits });
+		    	}
+		    }
+		    tab.setModel(model);
+		    mongoClient.close();
+		    
+		
+	}
+	
+	public void create_class() {
+		TableModel model = create_class_view.getTable().getModel();
+		JTable tab = create_class_view.getTable();
+		int[] teacher_count = {2,3};
+		int[] selected_rows ;
+		selected_rows = tab.getSelectedRows();
+		MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+		DB db = mongoClient.getDB( "Daycare" );
+		
+		DBCollection coll = db.getCollection("Classes");
+    	String age_cat = create_class_view.getAge_cat_combo().getSelectedItem().toString();
+		switch(age_cat) {
+		case "6-12":
+			int max_teacher_6 = 0;
+			List<Teacher_Model> class_teachers = new ArrayList<Teacher_Model>();
+			ClassRoom_Model class_t = new ClassRoom_Model();
+			class_t.setAgeGroup(age_cat);
+			class_t.setSection_name(class_t.assign_Section_name());
+			for(int val : selected_rows) {
+				if(max_teacher_6!=teacher_count[1]) {
+				String fname = (String)model.getValueAt(val, 0);
+				String lname = (String)model.getValueAt(val, 1);
+				String age_cat_v = (String)model.getValueAt(val, 3);
+				max_teacher_6 ++;
+				for(Teacher_Model t:School_Model.get_instance().getUnassigned_teacher_list()) {
+					t.setAssigned_sect(class_t.get_Section_name());
+					Teacher_Model temp = t;
+					if(temp.getLname().equalsIgnoreCase(lname)&temp.getFname().equalsIgnoreCase(fname)) {
+						DBCollection collection = db.getCollection("Teacher");
+						collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned",true)));
+						collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned_section",temp.getAssigned_sect())));
+						class_teachers.add(temp);
+						class_t.addTeacher(temp);
+					}
+				}
+				}
+					
+			}
+			School_Model.get_instance().getUnassigned_teacher_list().removeAll(class_teachers);
+			School_Model.get_instance().getAssigned_teacher_list().addAll(class_teachers);
+			School_Model.get_instance().add_classroom(class_t);
+			String strength;
+			if(class_t.getTeachers().size()==1) {
+				strength="4";
+			}else if(class_t.getTeachers().size()==2) {
+				strength="8";
+			}else {
+				strength="12";
+			}
+			DBObject class_6 = new BasicDBObject("Section_Name",class_t.curr_section_Name()).append("Age_Category", class_t.getAgeGroup()).append("Current_Teacher/Max_Teacher_Count",class_t.getTeachers().size()+"/3").append("Current_Student/Max_Student_Count",class_t.getStudents().size()+"/"+strength);
+			coll.insert(class_6);
+			mongoClient.close();
+			break;
+		case "13-24":
+			int max_teacher_13 = 0;
+			List<Teacher_Model> class_teachers_13 = new ArrayList<Teacher_Model>();
+			ClassRoom_Model class_t_13 = new ClassRoom_Model();
+			class_t_13.setAgeGroup(age_cat);
+			class_t_13.setSection_name(class_t_13.assign_Section_name());
+			for(int val : selected_rows) {
+				if(max_teacher_13!=teacher_count[1]) {
+					String fname = (String)model.getValueAt(val, 0);
+					String lname = (String)model.getValueAt(val, 1);
+					String age_cat_v = (String)model.getValueAt(val, 3);
+					max_teacher_13 ++;
+					for(Teacher_Model t:School_Model.get_instance().getUnassigned_teacher_list()){
+						t.setAssigned_sect(class_t_13.get_Section_name());
+						Teacher_Model temp = t;
+						if(temp.getLname().equalsIgnoreCase(lname)&temp.getFname().equalsIgnoreCase(fname)) {
+							DBCollection collection = db.getCollection("Teacher");
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned",true)));
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned_section",temp.getAssigned_sect())));
+							class_teachers_13.add(temp);
+							class_t_13.addTeacher(temp);
+						}
+					}
+				}
+			}
+			School_Model.get_instance().getUnassigned_teacher_list().removeAll(class_teachers_13);
+			School_Model.get_instance().getAssigned_teacher_list().addAll(class_teachers_13);
+			School_Model.get_instance().add_classroom(class_t_13);
+			String strength_1;
+			if(class_t_13.getTeachers().size()==1) {
+				strength_1="5";
+			}else if(class_t_13.getTeachers().size()==2) {
+				strength_1="10";
+			}else {
+				strength_1="15";
+			}
+			DBObject class_13 = new BasicDBObject("Section_Name",class_t_13.curr_section_Name()).append("Age_Category", class_t_13.getAgeGroup()).append("Current_Teacher/Max_Teacher_Count",class_t_13.getTeachers().size()+"/3").append("Current_Student/Max_Student_Count",class_t_13.getStudents().size()+"/"+strength_1);
+			coll.insert(class_13);
+			mongoClient.close();
+			break;
+		case "25-36":
+			List<Teacher_Model> class_teachers_25 = new ArrayList<Teacher_Model>();
+			ClassRoom_Model class_t_25 = new ClassRoom_Model();
+			class_t_25.setAgeGroup(age_cat);
+			class_t_25.setSection_name(class_t_25.assign_Section_name());
+			int max_teacher_25 = 0;
+			for(int val : selected_rows) {
+				if(max_teacher_25!=teacher_count[1]) {
+					String fname = (String)model.getValueAt(val, 0);
+					String lname = (String)model.getValueAt(val, 1);
+					String age_cat_v = (String)model.getValueAt(val, 3);
+					max_teacher_25 ++;
+					for(Teacher_Model t:School_Model.get_instance().getUnassigned_teacher_list()) {
+						t.setAssigned_sect(class_t_25.get_Section_name());
+						Teacher_Model temp = t;
+						if(temp.getLname().equalsIgnoreCase(lname)&temp.getFname().equalsIgnoreCase(fname)) {
+							DBCollection collection = db.getCollection("Teacher");
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned",true)));
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned_section",temp.getAssigned_sect())));
+							class_teachers_25.add(temp);
+							class_t_25.addTeacher(temp);}
+					}
+				}
+			}
+			School_Model.get_instance().getUnassigned_teacher_list().removeAll(class_teachers_25);
+			School_Model.get_instance().getAssigned_teacher_list().addAll(class_teachers_25);
+			School_Model.get_instance().add_classroom(class_t_25);
+			String strength_2;
+			if(class_t_25.getTeachers().size()==1) {
+				strength_2="5";
+			}else if(class_t_25.getTeachers().size()==2) {
+				strength_2="10";
+			}else {
+				strength_2="15";
+			}
+			DBObject class_25 = new BasicDBObject("Section_Name",class_t_25.curr_section_Name()).append("Age_Category", class_t_25.getAgeGroup()).append("Current_Teacher/Max_Teacher_Count",class_t_25.getTeachers().size()+"/3").append("Current_Student/Max_Student_Count",class_t_25.getStudents().size()+"/"+strength_2);
+			coll.insert(class_25);
+			mongoClient.close();
+			break;
+		case "37-48":
+			List<Teacher_Model> class_teachers_37 = new ArrayList<Teacher_Model>();
+			ClassRoom_Model class_t_37 = new ClassRoom_Model();
+			class_t_37.setAgeGroup(age_cat);
+			class_t_37.setSection_name(class_t_37.assign_Section_name());
+			int max_teacher_37 = 0;
+			for(int val : selected_rows) {
+				if(max_teacher_37!=teacher_count[1]) {
+					String fname = (String)model.getValueAt(val, 0);
+					String lname = (String)model.getValueAt(val, 1);
+					String age_cat_v = (String)model.getValueAt(val, 3);
+					max_teacher_37 ++;
+					for(Teacher_Model t:School_Model.get_instance().getUnassigned_teacher_list()) {
+						t.setAssigned_sect(class_t_37.get_Section_name());
+						Teacher_Model temp = t;
+						if(temp.getLname().equalsIgnoreCase(lname)&temp.getFname().equalsIgnoreCase(fname)) {
+							DBCollection collection = db.getCollection("Teacher");
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned",true)));
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned_section",temp.getAssigned_sect())));
+							class_teachers_37.add(temp);
+							class_t_37.addTeacher(temp);}
+					}
+				}
+			}
+			School_Model.get_instance().getUnassigned_teacher_list().removeAll(class_teachers_37);
+			School_Model.get_instance().getAssigned_teacher_list().addAll(class_teachers_37);
+			School_Model.get_instance().add_classroom(class_t_37);
+			String strength_3;
+			if(class_t_37.getTeachers().size()==1) {
+				strength_3="6";
+			}else if(class_t_37.getTeachers().size()==2) {
+				strength_3="12";
+			}else {
+				strength_3="18";
+			}
+			
+			DBObject class_37 = new BasicDBObject("Section_Name",class_t_37.curr_section_Name()).append("Age_Category", class_t_37.getAgeGroup()).append("Current_Teacher/Max_Teacher_Count",class_t_37.getTeachers().size()+"/3").append("Current_Student/Max_Student_Count",class_t_37.getStudents().size()+"/"+strength_3);
+			coll.insert(class_37);
+			mongoClient.close();
+			break;
+		case "49-60":
+			List<Teacher_Model> class_teachers_49 = new ArrayList<Teacher_Model>();
+			ClassRoom_Model class_t_49 = new ClassRoom_Model();
+			class_t_49.setAgeGroup(age_cat);
+			class_t_49.setSection_name(class_t_49.assign_Section_name());
+			int max_teacher_49 = 0;
+			for(int val : selected_rows) {
+				if(max_teacher_49!=teacher_count[0]) {
+					String fname = (String)model.getValueAt(val, 0);
+					String lname = (String)model.getValueAt(val, 1);
+					String age_cat_v = (String)model.getValueAt(val, 3);
+					max_teacher_49 ++;
+					for(Teacher_Model t:School_Model.get_instance().getUnassigned_teacher_list()){
+						t.setAssigned_sect(class_t_49.get_Section_name());
+						Teacher_Model temp = t;
+						if(temp.getLname().equalsIgnoreCase(lname)&temp.getFname().equalsIgnoreCase(fname)) {
+							DBCollection collection = db.getCollection("Teacher");
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned",true)));
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned_section",temp.getAssigned_sect())));
+							class_teachers_49.add(temp);
+							class_t_49.addTeacher(temp);}
+					}
+				}
+			}
+			School_Model.get_instance().getUnassigned_teacher_list().removeAll(class_teachers_49);
+			School_Model.get_instance().getAssigned_teacher_list().addAll(class_teachers_49);
+			School_Model.get_instance().add_classroom(class_t_49);
+			String strength_4;
+			if(class_t_49.getTeachers().size()==1) {
+				strength_4="8";
+			}else if(class_t_49.getTeachers().size()==2) {
+				strength_4="16";
+			}else {
+				strength_4="24";
+			}
+			DBObject class_49 = new BasicDBObject("Section_Name",class_t_49.curr_section_Name()).append("Age_Category", class_t_49.getAgeGroup()).append("Current_Teacher/Max_Teacher_Count",class_t_49.getTeachers().size()+"/2").append("Current_Student/Max_Student_Count",class_t_49.getStudents().size()+"/"+strength_4);
+			
+			coll.insert(class_49);
+			mongoClient.close();
+			break;
+		case "61-72":
+			List<Teacher_Model> class_teachers_61 = new ArrayList<Teacher_Model>();
+			ClassRoom_Model class_t_61 = new ClassRoom_Model();
+			class_t_61.setAgeGroup(age_cat);
+			class_t_61.setSection_name(class_t_61.assign_Section_name());
+			int max_teacher_61 = 0;
+			for(int val : selected_rows) {
+				if(max_teacher_61!=teacher_count[0]) {
+					String fname = (String)model.getValueAt(val, 0);
+					String lname = (String)model.getValueAt(val, 1);
+					String age_cat_v = (String)model.getValueAt(val, 3);
+					max_teacher_61 ++;
+					for(Teacher_Model t:School_Model.get_instance().getUnassigned_teacher_list()) {
+						t.setAssigned_sect(class_t_61.get_Section_name());
+						Teacher_Model temp = t;
+						if(temp.getLname().equalsIgnoreCase(lname)&temp.getFname().equalsIgnoreCase(fname)) {
+							DBCollection collection = db.getCollection("Teacher");
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned",true)));
+							collection.update(new BasicDBObject("Last Name",lname), new BasicDBObject("$set",new BasicDBObject("assigned_section",temp.getAssigned_sect())));
+							class_teachers_61.add(temp);
+							class_t_61.addTeacher(temp);}
+					}
+				}
+			}
+			School_Model.get_instance().getUnassigned_teacher_list().removeAll(class_teachers_61);
+			School_Model.get_instance().getAssigned_teacher_list().addAll(class_teachers_61);
+			School_Model.get_instance().add_classroom(class_t_61);
+			String strength_5;
+			if(class_t_61.getTeachers().size()==1) {
+				strength_5="12";
+			}else{
+				strength_5="24";
+			}
+			DBObject class_61 = new BasicDBObject("Section_Name",class_t_61.curr_section_Name()).append("Age_Category", class_t_61.getAgeGroup()).append("Current_Teacher/Max_Teacher_Count",class_t_61.getTeachers().size()+"/2").append("Current_Student/Max_Student_Count",class_t_61.getStudents().size()+"/"+strength_5);
+			coll.insert(class_61);
+			mongoClient.close();
+			break;
+		}
+		
+		
+	}
+	
+	 
+}

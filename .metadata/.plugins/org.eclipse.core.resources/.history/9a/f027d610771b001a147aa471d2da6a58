@@ -1,0 +1,7 @@
+package Helpers;
+
+import javax.swing.table.DefaultTableCellRenderer;
+
+public class MyTableCellRenderer_Vaccination_Issue extends DefaultTableCellRenderer {
+
+}

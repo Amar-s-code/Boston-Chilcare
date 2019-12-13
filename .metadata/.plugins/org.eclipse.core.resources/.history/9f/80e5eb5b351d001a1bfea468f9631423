@@ -1,0 +1,94 @@
+package bostonchildcare.View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+public class Individual_Class_View extends JFrame {
+	private static final Individual_Class_View instance = new Individual_Class_View();
+	private JPanel contentPane;
+	private JTable table;
+	private JButton backbtn;
+
+	public static Individual_Class_View get_instance() {
+		ImageIcon ico = new ImageIcon("D:\\NEU\\Object Oriented Programming with Java\\Project\\DayCare\\BostonChildCare\\B.png");
+		BufferedImage img;
+		try {
+			img = ImageIO.read(new File("D:\\NEU\\Object Oriented Programming with Java\\Project\\DayCare\\BostonChildCare\\B.png"));
+			instance.setIconImage(img);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		instance.setTitle("Student Vaccination Report");
+		return instance;
+	}
+	public JTable getTable() {
+		return table;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+
+	public JButton getBackbtn() {
+		return backbtn;
+	}
+
+	public void setBackbtn(JButton backbtn) {
+		this.backbtn = backbtn;
+	}
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Individual_Class_View frame = new Individual_Class_View();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	private Individual_Class_View() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 624, 431);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(35, 90, 542, 229);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		
+		backbtn = new JButton("Back");
+		backbtn.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		backbtn.setBounds(34, 337, 162, 34);
+		contentPane.add(backbtn);
+	}
+
+}

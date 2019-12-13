@@ -1,0 +1,92 @@
+package bostonchildcare.Controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+
+import bostonchildcare.View.Login_Page_View;
+
+public class Login_Controller {
+private static final Login_Controller instance = new Login_Controller();
+private Login_Page_View login_view;
+private StudentTeacher_Office_Controller st_office_contr;
+private Admin_School_Frame_Controller admin_sch_frame_contr;
+private Login_Controller() {
+	this.login_view = Login_Page_View.get_instance();
+	initController();
+}
+
+public static Login_Controller get_instance() {
+	return instance;
+}
+
+public void initController() {
+	login_view.setVisible(true);
+	JButton Login_Btn = login_view.getLogin_Btn();
+	Login_Btn.addActionListener(e->verifyUser());
+	}
+
+public void verifyUser() {
+	JTextField uname_tfield = login_view.getUname_tfield();
+	JTextField pwd_tfield = login_view.getPwd_tfield();
+	
+	String username = uname_tfield.getText();
+	@SuppressWarnings("deprecation")
+	String password = pwd_tfield.getText();
+	MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+	DB db = mongoClient.getDB( "Daycare" );
+	DBCollection collection = db.getCollection("User_Accounts");
+	DBCursor cursorobj = collection.find();
+	cursorobj = collection.find(new BasicDBObject().append("User", username));
+	if(cursorobj.hasNext()) {
+	DBObject value = cursorobj.next();
+	switch(username) {
+	case "Admin":
+		if(value.get("Password").equals(password)) {
+			//JOptionPane.showMessageDialog(null, "Success");
+			login_view.setVisible(false);
+			admin_sch_frame_contr = Admin_School_Frame_Controller.get_instance();
+			admin_sch_frame_contr.initController();
+			mongoClient.close();
+			break;
+		}else {
+			JOptionPane.showMessageDialog(null, "Invalid Credentials", "Login_Error", JOptionPane.ERROR_MESSAGE);
+			mongoClient.close();
+			break;
+		}
+	case "Office":
+		if(value.get("Password").equals(password)) {
+			//JOptionPane.showMessageDialog(null, "Success");
+			login_view.setVisible(false);
+			st_office_contr = StudentTeacher_Office_Controller.get_instance();
+			st_office_contr.initController();
+			//s_t_selection_contr.initController();
+			mongoClient.close();
+			break;
+		}else {
+			JOptionPane.showMessageDialog(null, "Invalid Credentials", "Login_Error", JOptionPane.ERROR_MESSAGE);
+			mongoClient.close();
+			break;
+		}	
+	}
+	}else {
+		JOptionPane.showMessageDialog(null, "Invalid Credentials", "Login_Error",JOptionPane.ERROR_MESSAGE);
+	}
+	}
+}
+
+
+
+
+

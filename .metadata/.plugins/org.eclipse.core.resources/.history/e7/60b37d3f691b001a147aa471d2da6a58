@@ -1,0 +1,27 @@
+package Helpers;
+
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+
+class MyTableCellRenderer extends DefaultTableCellRenderer {
+	   public Component getTableCellRendererComponent(
+	            JTable table, Object value, boolean isSelected,
+	            boolean hasFocus, int row, int column)
+	   {
+	      MyTableModel mytm = (MyTableModel) table.getModel();
+	      Student_Model stud = (Student_Model) mytm.getValueAtRow(row);
+	  
+	      if (stud.getAge() > 7) {
+	         setBackground(Color.green);
+	      }
+	      else {
+	         setBackground(Color.red);
+	      }
+	  
+	      return super.getTableCellRendererComponent(table, value, isSelected,
+	                                                 hasFocus, row, column);
+	   }
+	}

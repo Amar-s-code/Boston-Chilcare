@@ -1,0 +1,84 @@
+package bostonchildcare.Controller;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.JButton;
+
+import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Student_Model;
+import bostonchildcare.View.StudentEnrollment_View;
+
+public class StudentEnrollment_Controller {
+private StudentEnrollment_View senrollment_view;
+private static final StudentEnrollment_Controller instance = new StudentEnrollment_Controller();
+
+private StudentEnrollment_Controller() {
+	senrollment_view = StudentEnrollment_View.get_instance();
+	initController();
+}
+
+public static StudentEnrollment_Controller get_instance() {
+	return instance;
+}
+
+public void initController() {
+	senrollment_view.setVisible(true);
+	JButton submit_btn = senrollment_view.getSubmit_btn();
+	JButton back_btn = senrollment_view.getBack_btn();
+	submit_btn.addActionListener(l->submit());
+	back_btn.addActionListener(l->back());
+}
+
+
+public void back() {
+	senrollment_view.setVisible(false);
+	StudentTeacher_Office_Controller.get_instance().initController();;
+}
+
+public void submit() {
+	//Date enroll_dt = new Date();
+	//System.out.println(LocalDateTime.from(enroll_dt.toInstant()).minusMonths(7));
+	Student_Model stud = new Student_Model();
+	stud.setFname(senrollment_view.getFname_fld().getText());
+	stud.setLname(senrollment_view.getLname_fld().getText());
+	stud.setAge(Integer.valueOf(senrollment_view.getAge_fld().getText()));
+	stud.setPname(senrollment_view.getPname_fld().getText());
+	stud.setContact(senrollment_view.getContact_fld().getText());
+	stud.setAge_cat(senrollment_view.getComboBox().getSelectedItem().toString());
+	stud.setbirthdate();
+	stud.setVacc_report_initialized(false);
+	stud.setRegdate(LocalDateTime.now().toLocalDate());
+	MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+	DB db = mongoClient.getDB( "Daycare" );
+	DBCollection coll = db.getCollection("Student");
+	DBCollection coll_v = db.getCollection("Vaccination");
+	List<Boolean> bool1 = new ArrayList<Boolean>(Arrays.asList(false));
+	List<Boolean> bool2 = new ArrayList<Boolean>(Arrays.asList(false,false));
+	List<Boolean> bool3 = new ArrayList<Boolean>(Arrays.asList(false,false,false));
+	List<Boolean> bool4 = new ArrayList<Boolean>(Arrays.asList(false,false,false,false));
+	List<Boolean> bool5 = new ArrayList<Boolean>(Arrays.asList(false,false,false,false,false));
+	BasicDBObject doc = new BasicDBObject().append("First Name",stud.getFname()).append("Last Name",stud.getLname()).append("Age",stud.getAge()).append("Section","").append("Parent's Name",stud.getPname()).append("Parent's Name",stud.getPname()).append("Age Category", stud.getAge_cat()).append("Birth Date",stud.getbirthdate()).append("Registration_date",stud.getRegdate()).append("Vaccination_report_initialized",false );
+    BasicDBObject vacc = new BasicDBObject().append("First Name",stud.getFname()).append("Last Name",stud.getLname()).append("Age",stud.getAge()).append("Age Category", stud.getAge_cat()).append("Hep_B", bool3).append("RV1",bool2).append("DTaP", bool5).append("Hib",bool4).append("PCV13",bool4).append("IPV", bool4).append("IIV",bool2).append("MMR",bool2).append("VAR", bool2).append("Hep_A", bool2).append("MENACWY", bool2).append("Tdap", bool1).append("HPV", bool1).append("MenB", bool1).append("PPSV23", bool1);
+	School_Model.get_instance().add_Student_unenrolled_student_list(stud);
+    coll.insert(doc);
+    coll_v.insert(vacc);
+    
+    
+}
+}

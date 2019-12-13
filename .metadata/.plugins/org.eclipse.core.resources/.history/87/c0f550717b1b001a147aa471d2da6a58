@@ -1,0 +1,15 @@
+package Helpers;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+
+public class Vaccination_Issue {
+public static boolean is_there_issue(String fname,String lname) {
+	MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+	 DB db = mongoClient.getDB( "Daycare" );
+	 DBCollection coll = db.getCollection("Vaccination");
+	 
+	return false;
+} 
+}

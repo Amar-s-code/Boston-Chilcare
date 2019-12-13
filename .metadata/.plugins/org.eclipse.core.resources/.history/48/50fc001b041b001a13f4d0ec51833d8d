@@ -1,0 +1,26 @@
+package bostonchildcare.Controller;
+
+import javax.swing.JTable;
+
+import bostonchildcare.View.CurrentVaccinationReport_View;
+
+public class CurrentVaccinationReport_Controller {
+private CurrentVaccinationReport_View cv_view;
+private static final CurrentVaccinationReport_Controller instance = new CurrentVaccinationReport_Controller();
+
+private CurrentVaccinationReport_Controller() {
+	
+}
+
+public static CurrentVaccinationReport_Controller get_instance() {
+	return instance;
+}
+
+public void initController(String fname,String lname) {
+this.cv_view = CurrentVaccinationReport_View.get_instance();	
+this.cv_view.setVisible(true);
+
+}
+
+
+}

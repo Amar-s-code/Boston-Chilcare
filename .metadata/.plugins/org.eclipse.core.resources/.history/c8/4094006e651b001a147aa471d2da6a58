@@ -1,0 +1,105 @@
+package bostonchildcare.Controller;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import org.bson.Document;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import bostonchildcare.Model.School_Model;
+import bostonchildcare.Model.Student_Model;
+import bostonchildcare.View.Enrolled_Students_View;
+//import bostonchildcare.View.Enrolled_Students_View.MyTableModel;
+
+public class Enrolled_Student_Controller {
+
+
+private static final Enrolled_Student_Controller instance = new Enrolled_Student_Controller();
+private Enrolled_Students_View esview;
+private StudentTeacher_Office_Controller st_contr;
+private Vaccination_Controller v_contr;
+private Login_Controller lcontr;
+
+private Enrolled_Student_Controller() {
+	this.esview = Enrolled_Students_View.get_instance();
+	load_table(esview.getAge_cat_combo().getSelectedItem().toString());
+}
+
+public static Enrolled_Student_Controller get_instance() {
+	return instance;
+}
+
+public void initController() {
+	esview.setVisible(true);
+	String age_cat = esview.getAge_cat_combo().getSelectedItem().toString();
+	esview.getAge_cat_combo().addActionListener(l->load_table(esview.getAge_cat_combo().getSelectedItem().toString()));
+	esview.getBack_btn().addActionListener(l->go_back());
+	
+	esview.getBtnEnterVaccinationDetails().addActionListener(l->nav_vaccination_details());
+}
+
+public void nav_vaccination_details() {
+	esview.setVisible(false);
+	JTable table = esview.getTable();
+	int selected_row = table.getSelectedRow();
+	String fname = (String)table.getValueAt(selected_row, 0);
+	String lname = (String)table.getValueAt(selected_row, 1);
+	v_contr.get_instance().initController(fname,lname);
+}
+
+public void load_table(String age_cat) {
+	MongoClient client = new MongoClient("localhost",27017);
+	DB db = client.getDB("Daycare");
+	DBCollection coll = db.getCollection("Student");
+	DBObject query = QueryBuilder.start("Section").is("").and("Age Category").is(age_cat).get();
+	DBCursor cursor = coll.find(query);
+	JTable tab = esview.getTable();
+	String[] column = {"First Name","Last Name","Age","Parent's Name","Contact"};
+	
+	
+	DefaultTableModel model =  new DefaultTableModel(column,0);
+	while(cursor.hasNext()) {
+		DBObject obj = cursor.next();
+		String fname = (String)obj.get("First Name");
+		String lname = (String)obj.get("Last Name");
+		int age = (Integer)obj.get("Age");
+		String pname = (String)obj.get("Parent's Name");
+		String contact = (String)obj.get("Contact");
+
+		model.addRow(new Object[] {fname,lname,age,pname,contact});	
+		
+		//model.setRowColour(1, Color.YELLOW);
+		
+	}
+	tab.setModel(model);
+}
+
+public void go_back() {
+	esview.setVisible(false);
+	st_contr.get_instance().initController();
+}
+
+public void logout() {
+	esview.setVisible(false);
+	lcontr.get_instance().initController();
+}
+
+}

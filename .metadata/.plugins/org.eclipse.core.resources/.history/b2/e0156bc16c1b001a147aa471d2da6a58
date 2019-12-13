@@ -1,0 +1,60 @@
+package Helpers;
+
+import java.util.Vector;
+
+import javax.swing.table.AbstractTableModel;
+
+import bostonchildcare.Model.Student_Model;
+
+public class MyTableModel extends AbstractTableModel {
+	   // holds the strings to be displayed in the column headers of our table
+	   final String[] columnNames = {"First Name","Last Name","Age","Parent's Name","Contact"};
+	  
+	   // holds the data types for all our columns
+	   final Class[] columnClasses = {String.class, String.class, Integer.class, String.class,String.class};
+	  
+	   // holds our data
+	   final Vector data = new Vector();
+	   
+	   // adds a row
+	   public void addStudent(Student_Model m) {
+	      data.addElement(m);
+	      fireTableRowsInserted(data.size()-1, data.size()-1);
+	   }
+	  
+	   public int getColumnCount() {
+	      return columnNames.length;
+	   }
+	          
+	   public int getRowCount() {
+	      return data.size();
+	   }
+	  
+	   public String getColumnName(int col) {
+	      return columnNames[col];
+	   }
+	  
+	   public Class getColumnClass(int c) {
+	      return columnClasses[c].getClass();
+	   }
+	  
+	   public Object getValueAt(int row, int col) {
+	      Student_Model stud = (Student_Model) data.elementAt(row);
+	      if (col == 0)      return stud.getFname();
+	      else if (col == 1) return stud.getLname();
+	      else if (col == 2) return stud.getAge();
+	      else if (col == 3) return stud.getPname();
+	      else if (col == 4) return stud.getContact();
+	      else return null;
+	   }
+	  
+	   public Object getValueAtRow(int row) {
+	      Student_Model stu = (Student_Model) data.elementAt(row);
+	      return stu;
+	   }
+	  
+	   public boolean isCellEditable(int row, int col) {
+	      return false;
+	   }
+	}
+	  

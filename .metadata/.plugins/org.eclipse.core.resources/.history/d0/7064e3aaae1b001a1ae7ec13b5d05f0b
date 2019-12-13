@@ -1,0 +1,111 @@
+package bostonchildcare.Controller;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+
+import bostonchildcare.View.Admin_School_Frame_View;
+import bostonchildcare.View.Create_Class_View;
+
+public class Admin_School_Frame_Controller {
+private static final Admin_School_Frame_Controller instance = new Admin_School_Frame_Controller();
+private Admin_School_Frame_View admin_home_view;
+private Create_Class_Controller create_class_contr;
+
+public static Admin_School_Frame_Controller get_instance() {
+	return instance;
+}
+
+private Admin_School_Frame_Controller() {
+	this.admin_home_view = Admin_School_Frame_View.get_instance();
+}
+
+public void initController() {
+	MongoClientURI uri = new MongoClientURI(
+		    "mongodb+srv://amar:mathisfun@mydaycare-i8kor.mongodb.net/test?retryWrites=true&w=majority");
+	MongoClient mongoClient = new MongoClient( uri);
+	load_data(mongoClient);
+	admin_home_view.setVisible(true);
+	JButton modify = admin_home_view.getModify_btn();
+	JButton logout = admin_home_view.getLogout_btn();
+	JButton view = admin_home_view.getView_btn();
+	logout.addActionListener(l->logout_button_navigation());
+	modify.addActionListener(e->modify_button_navigation());
+	view.addActionListener(v->view_button_navigation());
+}
+
+
+public void view_button_navigation() {
+admin_home_view.setVisible(false);
+JTable tab = admin_home_view.getTable();
+TableModel model = tab.getModel();
+int[] selected_rows = tab.getSelectedRows();
+for(int  r:selected_rows) {
+	  String section_name = (String)model.getValueAt(r,0);
+	  String age_category = (String)model.getValueAt(r,1);
+	  Individual_Class_Controller ic = new Individual_Class_Controller();
+	  ic.initController(section_name,age_category);
+	}
+}
+
+public void logout_button_navigation() {
+admin_home_view.setVisible(false);
+Login_Controller.get_instance().initController();
+}
+
+public void modify_button_navigation() {
+	Object[] options = {"Add Class","Remove Class","Cancel"};
+	int input = JOptionPane.showOptionDialog(null, "Select the task you want to perform ", "Select the Task", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+	switch(input) {
+	case JOptionPane.YES_OPTION:
+		admin_home_view.setVisible(false);
+		create_class_contr = Create_Class_Controller.get_instance();
+		create_class_contr.initController();
+		break;
+	case JOptionPane.NO_OPTION:
+		break;
+	case JOptionPane.CANCEL_OPTION:
+		break;
+	}
+}
+
+public void load_data(MongoClient mongoClient) {
+	JTable tab = admin_home_view.getTable();
+	DB db  = mongoClient.getDB("Mongobackup");
+	DBCollection collection = db.getCollection("Classes");
+	DBCursor cursor = null;
+	cursor = collection.find();
+	String[] colnames = {"Section_Name","Age_Group","Current_Teacher_Capacity/Max_Capacity","Current_Student_Capacity/Max_Capacity"};
+	DefaultTableModel model = new DefaultTableModel(colnames,0);
+	while(cursor.hasNext()) {
+		DBObject obj = cursor.next();
+		String sec_name = (String)obj.get("Section_Name");
+		String age_category = (String)obj.get("Age_Category");
+		String ct_mt = (String)obj.get("Current_Teacher/Max_Teacher_Count");
+		String cs_ms = (String)obj.get("Current_Student/Max_Student_Count");
+		model.addRow(new Object[] {sec_name,age_category,ct_mt,cs_ms});
+	}
+	tab.setModel(model);
+}
+
+
+public void view_class() {
+	JTable tab = admin_home_view.getTable();
+	TableModel model = tab.getModel();
+	int[] selected_rows = tab.getSelectedRows();
+	for(int  r:selected_rows) {
+		  String section_name = (String)model.getValueAt(r,0);
+		  String age_category = (String)model.getValueAt(r,1);
+	}
+}
+
+}

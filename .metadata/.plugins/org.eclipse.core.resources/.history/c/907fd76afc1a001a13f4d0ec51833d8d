@@ -1,0 +1,121 @@
+package bostonchildcare.View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.DefaultComboBoxModel;
+
+public class ClassStudents_View extends JFrame {
+
+	private static final ClassStudents_View instance = new ClassStudents_View();
+	private JPanel contentPane;
+	private JTable table;
+	private JComboBox agecatcombo;
+	private JComboBox sectcombo;
+	private JButton backbtn;
+	private JLabel lblClassStrength;
+
+	public static ClassStudents_View get_instance() {
+		return instance;
+	}
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ClassStudents_View frame = new ClassStudents_View();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	private ClassStudents_View() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 818, 576);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		agecatcombo = new JComboBox();
+		agecatcombo.setModel(new DefaultComboBoxModel(new String[] {"6-12", "13-24", "25-36", "37-48", "49-60", "61-72"}));
+		agecatcombo.setBounds(61, 43, 655, 22);
+		contentPane.add(agecatcombo);
+		
+		sectcombo = new JComboBox();
+		sectcombo.setBounds(61, 94, 655, 22);
+		contentPane.add(sectcombo);
+		
+		lblClassStrength = new JLabel("Class Strength:");
+		lblClassStrength.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblClassStrength.setBounds(488, 151, 109, 31);
+		contentPane.add(lblClassStrength);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(61, 195, 655, 252);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		
+		backbtn = new JButton("Back");
+		backbtn.setBounds(61, 471, 129, 25);
+		contentPane.add(backbtn);
+	}
+	public JPanel getContentPane() {
+		return contentPane;
+	}
+	public void setContentPane(JPanel contentPane) {
+		this.contentPane = contentPane;
+	}
+	public JTable getTable() {
+		return table;
+	}
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+	public JComboBox getAgecatcombo() {
+		return agecatcombo;
+	}
+	public void setAgecatcombo(JComboBox agecatcombo) {
+		this.agecatcombo = agecatcombo;
+	}
+	public JComboBox getSectcombo() {
+		return sectcombo;
+	}
+	public void setSectcombo(JComboBox sectcombo) {
+		this.sectcombo = sectcombo;
+	}
+	public JButton getBackbtn() {
+		return backbtn;
+	}
+	public void setBackbtn(JButton backbtn) {
+		this.backbtn = backbtn;
+	}
+	public JLabel getLblClassStrength() {
+		return lblClassStrength;
+	}
+	public void setLblClassStrength(JLabel lblClassStrength) {
+		this.lblClassStrength = lblClassStrength;
+	}
+	public static ClassStudents_View getInstance() {
+		return instance;
+	}
+}

@@ -1,0 +1,180 @@
+package bostonchildcare.View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+
+public class StudentEnrollment_View extends JFrame {
+	private static final StudentEnrollment_View instance = new StudentEnrollment_View();
+	private JPanel contentPane;
+	private JTextField fname_fld;
+	private JTextField lname_fld;
+	private JTextField age_fld;
+	private JTextField pname_fld;
+	private JTextField contact_fld;
+	private JButton submit_btn;
+	private JButton back_btn;
+	private JLabel age_cat_lbl;
+	private JComboBox comboBox;
+
+	
+	public JComboBox getComboBox() {
+		return comboBox;
+	}
+
+	public JButton getSubmit_btn() {
+		return submit_btn;
+	}
+
+	public JButton getBack_btn() {
+		return back_btn;
+	}
+
+	public JPanel getContentPane() {
+		return contentPane;
+	}
+
+	public JTextField getFname_fld() {
+		return fname_fld;
+	}
+
+	public JTextField getLname_fld() {
+		return lname_fld;
+	}
+
+	public JTextField getAge_fld() {
+		return age_fld;
+	}
+
+	public JTextField getPname_fld() {
+		return pname_fld;
+	}
+
+	public JTextField getContact_fld() {
+		return contact_fld;
+	}
+
+	public static StudentEnrollment_View get_instance() {
+		ImageIcon ico = new ImageIcon("D:\\NEU\\Object Oriented Programming with Java\\Project\\DayCare\\BostonChildCare\\B.png");
+		BufferedImage img;
+		try {
+			img = ImageIO.read(new File("D:\\NEU\\Object Oriented Programming with Java\\Project\\DayCare\\BostonChildCare\\B.png"));
+			instance.setIconImage(img);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		instance.setTitle("Student Vaccination Report");
+		return instance;
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					StudentEnrollment_View frame = new StudentEnrollment_View();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	private StudentEnrollment_View() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 580, 437);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel fname_lbl = new JLabel("First Name");
+		fname_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		fname_lbl.setBounds(80, 48, 97, 16);
+		contentPane.add(fname_lbl);
+		
+		fname_fld = new JTextField();
+		fname_fld.setBounds(301, 45, 162, 22);
+		contentPane.add(fname_fld);
+		fname_fld.setColumns(10);
+		
+		JLabel lname_lbl = new JLabel("Last Name");
+		lname_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lname_lbl.setBounds(80, 97, 97, 16);
+		contentPane.add(lname_lbl);
+		
+		lname_fld = new JTextField();
+		lname_fld.setBounds(301, 94, 162, 22);
+		contentPane.add(lname_fld);
+		lname_fld.setColumns(10);
+		
+		JLabel age_lbl = new JLabel("Age");
+		age_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		age_lbl.setBounds(80, 147, 56, 19);
+		contentPane.add(age_lbl);
+		
+		age_fld = new JTextField();
+		age_fld.setBounds(301, 144, 162, 22);
+		contentPane.add(age_fld);
+		age_fld.setColumns(10);
+		
+		JLabel pname_lbl = new JLabel("Parent's Name");
+		pname_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		pname_lbl.setBounds(80, 189, 121, 16);
+		contentPane.add(pname_lbl);
+		
+		pname_fld = new JTextField();
+		pname_fld.setBounds(301, 186, 162, 22);
+		contentPane.add(pname_fld);
+		pname_fld.setColumns(10);
+		
+		JLabel contact_lbl = new JLabel("Contact");
+		contact_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		contact_lbl.setBounds(80, 233, 97, 16);
+		contentPane.add(contact_lbl);
+		
+		contact_fld = new JTextField();
+		contact_fld.setBounds(301, 230, 162, 22);
+		contentPane.add(contact_fld);
+		contact_fld.setColumns(10);
+		
+		submit_btn = new JButton("Submit");
+		submit_btn.setBounds(314, 323, 149, 39);
+		contentPane.add(submit_btn);
+		
+		back_btn = new JButton("Back");
+		back_btn.setBounds(80, 323, 149, 39);
+		contentPane.add(back_btn);
+		
+		age_cat_lbl = new JLabel("Age Category");
+		age_cat_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		age_cat_lbl.setBounds(80, 274, 149, 21);
+		contentPane.add(age_cat_lbl);
+		
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"6-12", "13-24", "25-36", "37-48", "49-60", "61-72"}));
+		comboBox.setBounds(301, 275, 162, 22);
+		contentPane.add(comboBox);
+	}
+}

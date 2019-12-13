@@ -1,0 +1,116 @@
+package bostonchildcare.View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.Image;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.awt.event.ActionEvent;
+import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+
+public class Login_Page_View extends JFrame {
+	private static final Login_Page_View instance = new Login_Page_View();
+	private JPanel contentPane;
+	private JTextField uname_tfield;
+	private JPasswordField pwd_tfield;
+	private JLabel pwd_lbl;
+	private JButton Login_Btn;
+	
+	
+	public JButton getLogin_Btn() {
+		return Login_Btn;
+	}
+	public JPanel getContentPane() {
+		return contentPane;
+	}
+	public JTextField getUname_tfield() {
+		return uname_tfield;
+	}
+	public JPasswordField getPwd_tfield() {
+		return pwd_tfield;
+	}
+	public JLabel getPwd_lbl() {
+		return pwd_lbl;
+	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static Login_Page_View get_instance() {
+		ImageIcon ico = new ImageIcon("D:\\NEU\\Object Oriented Programming with Java\\Project\\DayCare\\BostonChildCare\\B.png");
+		BufferedImage img;
+		try {
+			img = ImageIO.read(new File("D:\\NEU\\Object Oriented Programming with Java\\Project\\DayCare\\BostonChildCare\\B.png"));
+			instance.setIconImage(img);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		instance.setTitle("Login");
+		return instance;
+	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Login_Page_View frame = new Login_Page_View();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	private Login_Page_View() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 483, 389);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		uname_tfield = new JTextField();
+		uname_tfield.setBounds(179, 88, 116, 22);
+		contentPane.add(uname_tfield);
+		uname_tfield.setColumns(10);
+		
+		pwd_tfield = new JPasswordField();
+		pwd_tfield.setBounds(179, 154, 116, 22);
+		contentPane.add(pwd_tfield);
+		
+		JLabel uname_lbl = new JLabel("User");
+		uname_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		uname_lbl.setBounds(81, 89, 86, 16);
+		contentPane.add(uname_lbl);
+		
+		pwd_lbl = new JLabel("Password");
+		pwd_lbl.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		pwd_lbl.setBounds(81, 155, 86, 16);
+		contentPane.add(pwd_lbl);
+		
+		Login_Btn = new JButton("Login");
+		Login_Btn.setBounds(312, 261, 97, 25);
+		contentPane.add(Login_Btn);
+	}
+}

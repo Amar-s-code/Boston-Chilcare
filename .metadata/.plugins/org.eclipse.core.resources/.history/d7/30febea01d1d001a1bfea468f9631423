@@ -1,0 +1,102 @@
+package bostonchildcare.View;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class StudentTeacher_Office_View extends JFrame {
+
+	private static final StudentTeacher_Office_View instance = new StudentTeacher_Office_View();
+	private JPanel contentPane;
+	private JButton newstuenrol_btn;
+	private JButton enrolledstu_btn;
+	private JButton assignClass_btn;
+	private JButton teachers_btn;
+	private JButton logout_btn;
+	
+	public static StudentTeacher_Office_View get_instance() {
+		return instance;
+	}
+	
+	public JButton getNewstuenrol_btn() {
+		return newstuenrol_btn;
+	}
+
+	public JButton getEnrolledstu_btn() {
+		return enrolledstu_btn;
+	}
+
+	public JButton getAssignClass_btn() {
+		return assignClass_btn;
+	}
+
+	public JButton getTeachers_btn() {
+		return teachers_btn;
+	}
+
+	public JButton getLogout_btn() {
+		return logout_btn;
+	}
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					StudentTeacher_Office_View frame = new StudentTeacher_Office_View();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	private StudentTeacher_Office_View() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 710, 561);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		newstuenrol_btn = new JButton("New Student Enrollment");
+		newstuenrol_btn.setBounds(45, 44, 525, 41);
+		contentPane.add(newstuenrol_btn);
+		
+		enrolledstu_btn = new JButton("Enrolled Students");
+		enrolledstu_btn.setBounds(45, 117, 525, 41);
+		contentPane.add(enrolledstu_btn);
+		
+		assignClass_btn = new JButton("Assign Class");
+		assignClass_btn.setBounds(45, 182, 525, 41);
+		contentPane.add(assignClass_btn);
+		
+		logout_btn = new JButton("Logout");
+		logout_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		logout_btn.setBounds(380, 349, 190, 31);
+		contentPane.add(logout_btn);
+		
+		teachers_btn = new JButton("View Class");
+		teachers_btn.setBounds(45, 250, 525, 41);
+		contentPane.add(teachers_btn);
+		
+		JButton load_reg_stu_btn = new JButton("Load Registered Students");
+		load_reg_stu_btn.setBounds(45, 349, 201, 34);
+		contentPane.add(load_reg_stu_btn);
+	}
+}
